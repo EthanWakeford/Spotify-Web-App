@@ -36,8 +36,7 @@ def user():
 @app.route('/api/artist', methods=['GET'])
 def artist():
     """gets artist data"""
-    response = spotify.artist.get_artist()
-    return(response)
+    return spotify.artist.get_artist()
 
 
 if __name__ == "__main__":
