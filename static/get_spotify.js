@@ -26,13 +26,18 @@ function get_artist() {
     url: 'http://localhost:3000/api/artist',
     method: 'GET',
     success: function(response) {
-      const obj = JSON.parse(response);
+      console.log('success', response)
+      if (response.status == 401) {
+        console.log('Bad Token, refresh it');
+        return;
+      }
+      const obj = JSON.parse(response.text);
       console.log(`successful Query artist`, obj);
 
       place_artist(obj);
     },
-    error: function() {
-      console.log('failed artist query');
+    error: function(response) {
+      console.log('failed artist query', response);
     }
   })
 }
