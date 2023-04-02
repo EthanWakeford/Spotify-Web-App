@@ -11,7 +11,7 @@ function get_user() {
     url: 'http://localhost:3000/api/user',
     method: 'GET',
     success: function(response) {
-      console.log(`successful Query: response: ${response}`);
+      console.log('successful Query: response:', response);
     },
     error: function() {
       console.log('failed user query');
