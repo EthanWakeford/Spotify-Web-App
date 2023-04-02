@@ -34,9 +34,9 @@ def create_token(*args):
 def create_auth_token(*args):
     """ Creates a spotify authorization code and an access token,
     args are the scopes passed to the auth code"""
-    pass
+    
     # first we create an authorization code
-"""    client_id = getenv('CLIENT_ID')
+    client_id = getenv('CLIENT_ID')
     if args:
         scope = ' '.join(args)
     url = 'https://accounts.spotify.com/authorize'
@@ -50,10 +50,10 @@ def create_auth_token(*args):
     
     webbrowser.open("https://accounts.spotify.com/authorize?" + urlencode(auth_headers))
 
-    #auth_code = json.loads(r.text)['code']
+    # auth_code = json.loads(r.text)['code']
 
     # Now we create an access token with the auth code
-    return 'asdf'"""
+    return 'asdf'
 
 if __name__ == '__main__': 
     create_token()

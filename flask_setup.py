@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 """ runs a flask server """
-from flask import Flask, render_template, make_response
+from flask import Flask, render_template, make_response, request
 import spotify
-import requests
-import os
 
 app = Flask(__name__)
 
@@ -31,6 +29,11 @@ Usage:
 def user():
     """gets user data"""
     return spotify.user.get_user()
+
+@app.route('/api/me', methods=['GET'])
+def me():
+    """gets info about current user"""
+    return spotify.user.get_me()
 
 
 @app.route('/api/artists', methods=['GET'])
