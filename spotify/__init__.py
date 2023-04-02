@@ -4,4 +4,4 @@
 import spotify.user
 import spotify.artist
 import spotify.token
-print('initting')
+import spotify.recommendation
