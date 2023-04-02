@@ -1,17 +1,15 @@
 $(document).ready(function() {
-  console.log('jquery working');
-  get_user();
-  get_artist();
+  getUser();
 })
 
-function get_user() {
+function getUser() {
   //queries serverside api to retrive info about spotify user
 
   $.ajax({
-    url: 'http://localhost:3000/api/user',
+    url: 'http://localhost:3000/api/users',
     method: 'GET',
     success: function(response) {
-      console.log('successful Query: response:', response);
+      console.log('successful user', response);
     },
     error: function() {
       console.log('failed user query');
@@ -19,22 +17,17 @@ function get_user() {
   })
 }
 
-function get_artist() {
+function getArtist() {
   //queries serverside api to retrive info about spotify user
 
   $.ajax({
-    url: 'http://localhost:3000/api/artist',
+    url: 'http://localhost:3000/api/artists',
     method: 'GET',
     success: function(response) {
-      console.log('success', response)
-      if (response.status == 401) {
-        console.log('Bad Token, refresh it');
-        return;
-      }
       const obj = JSON.parse(response.text);
       console.log(`successful Query artist`, obj);
 
-      place_artist(obj);
+      placeArtist(obj);
     },
     error: function(response) {
       console.log('failed artist query', response);
@@ -42,9 +35,10 @@ function get_artist() {
   })
 }
 
-function place_artist(artist) {
-  $('body').append(`
-  <ul id="artist">
+function placeArtist(artist) {
+  $('#artist').remove();
+  $('div.artists').append(`
+<ul id="artist">
   <li>${artist.name}</li>
   <li>Popularity: ${artist.popularity}</li>
   <li>Genres:
@@ -63,4 +57,18 @@ function place_artist(artist) {
   for (i of artist.images) {
     $('#artist #images').append(`<img src=${i.url} width=200>`)
   }
+}
+
+function getRecommendations() {
+  $(document.body).append('<p>personally I recommend this dick</p>');
+  $.ajax({
+    url: 'http://localhost:3000/api/recommendations',
+    method: 'GET',
+    success: function(response) {
+      console.log(`successful Query recs`, response);
+    },
+    error: function(response) {
+      console.log('failed recs query', response);
+    }
+  })
 }

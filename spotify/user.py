@@ -6,6 +6,5 @@ def get_user():
     token = create_token()
     url = 'https://api.spotify.com/v1/users/223tihi7zuc4xc2d4ppsg6d7i'
 
-    print(token)
     r = requests.get(url, headers={'Authorization': f'Bearer {token}'})
     return r.text

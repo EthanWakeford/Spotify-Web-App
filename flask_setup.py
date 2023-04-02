@@ -27,17 +27,22 @@ Usage:
 """
 
 
-@app.route('/api/user', methods=['GET'])
+@app.route('/api/users', methods=['GET'])
 def user():
     """gets user data"""
     return spotify.user.get_user()
 
 
-@app.route('/api/artist', methods=['GET'])
+@app.route('/api/artists', methods=['GET'])
 def artist():
     """gets artist data"""
     return spotify.artist.get_artist()
 
+
+@app.route('/api/recommendations', methods=['GET'])
+def recommendations():
+    """gets recommendations"""
+    return spotify.recommendation.get_recommendations()
 
 if __name__ == "__main__":
     """ Main Function """
