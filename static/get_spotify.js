@@ -1,6 +1,13 @@
 $(document).ready(function() {
-  getUser();
-  const authCode = getAuthCode();
+  // getUser();
+  authCode = getAuthCode();
+
+  if (!authCode) {
+    $('.logged_out').css('display', 'block');
+  } else {
+    $('.logged_in').css('display', 'block');
+    getMe();
+  }
 })
 
 function getAuthCode() {
@@ -20,7 +27,17 @@ function getAuthCode() {
 function logIn() {
   // logs the users into the spotify API, or creates a button for the user to sign in
   console.log(authCode);
-  
+  $.ajax({
+    url: 'http://localhost:3000/api/log_in',
+    method: 'GET',
+    success: function(response) {
+      console.log(response);
+    },
+    error: function(response) {
+      console.log('failed login');
+      console.log(response);
+    }
+  });
 }
 
 function getUser() {
@@ -40,12 +57,13 @@ function getUser() {
 
 function getMe() {
   //gets info about current user, redirects to spotify page for user to allow access to private info
-
+  console.log(authCode);
   $.ajax({
-    url: 'http://localhost:3000/api/me',
+    url: `http://localhost:3000/api/me/${authCode}`,
     method: 'GET',
     success: function(response) {
       console.log('sucessful me', response);
+      $('.logged_in h1').text(`Welcome ${JSON.parse(response).display_name}`)
     },
     error: function() {
       console.log('failed me query');

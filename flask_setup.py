@@ -30,17 +30,20 @@ def user():
     """gets user data"""
     return spotify.user.get_user()
 
-@app.route('/api/me', methods=['GET'])
-def me():
+@app.route('/api/me/<auth_code>', methods=['GET'])
+def me(auth_code=''):
     """gets info about current user"""
-    return spotify.user.get_me()
+    return spotify.user.get_me(auth_code)
 
+@app.route('/api/log_in', methods=['GET'])
+def log_in():
+    """logs the user into spotfys api"""
+    return spotify.token.create_auth_code('user-read-private', 'user-read-email');
 
 @app.route('/api/artists', methods=['GET'])
 def artist():
     """gets artist data"""
     return spotify.artist.get_artist()
-
 
 @app.route('/api/recommendations', methods=['GET'])
 def recommendations():
