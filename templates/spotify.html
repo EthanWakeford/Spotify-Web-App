@@ -11,23 +11,30 @@
   <script></script>
 </head>
 <body>
-  <h1>Spotify</h1>
-  <div class="artists">
-    <form onsubmit="getArtist();return false">
-      <input type="submit" value="get artist">
-    </form>
+  <div class="logged_out">`
+    <h1>Spotify</h1>
+    <h3>Hello, log yourself in here</h3>
+    <div class="me">
+      <form onsubmit="logIn();return false">
+        <input type="submit" value="Log me in">
+      </form>
+    </div>
   </div>
-  <hr>
-  <div class="recommendations">
-    <form onsubmit="getRecommendations();return false">
-      <input type="submit" value="Get recommendations">
-    </form>
-  </div>
-  <hr>
-  <div class="me">
-    <form onsubmit="logIn"();return false">
-      <input type="submit" value="Log me in">
-    </form>
+  <div class="logged_in">
+    <h1>Spotify</h1>
+    <div class="artists">
+      <form onsubmit="getArtist();return false">
+        <input type="submit" value="get artist">
+      </form>
+    </div>
+    <hr>
+    <div class="recommendations">
+      <form onsubmit="getRecommendations();return false">
+        <input type="submit" value="Get recommendations">
+      </form>
+    </div>
+    <hr>
+    
   </div>
 </body>
 </html>

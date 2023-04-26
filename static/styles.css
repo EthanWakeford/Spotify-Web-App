@@ -2,3 +2,7 @@ body {
   background-color: #201F1F;
   color: #F0F0F0;
 }
+
+.logged_out, .logged_in {
+  display: none;
+}
