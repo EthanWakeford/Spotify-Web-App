@@ -22,8 +22,6 @@ def create_token(*args):
         'client_id': client_id,
         'client_secret': client_secret
     }
-    if args:
-        data['scope'] = ' '.join(args)
 
     r = requests.post(url, headers=headers, data=data)
 
@@ -31,29 +29,45 @@ def create_token(*args):
     return json.loads(r.text)['access_token']
 
 
-def create_auth_token(*args):
+def create_auth_code(*args):
     """ Creates a spotify authorization code and an access token,
     args are the scopes passed to the auth code"""
     
     # first we create an authorization code
     client_id = getenv('CLIENT_ID')
-    if args:
-        scope = ' '.join(args)
     url = 'https://accounts.spotify.com/authorize'
     auth_headers = {
         'client_id': client_id,
         'response_type': 'code',
-        'scope': scope,
-        'redirect_uri': 'http://localhost:3000'
+        'redirect_uri': 'http://localhost:3000',
+        'scope': 'user-read-private user-read-email'
     }
     # maybe add a state scope if this is ever used for anything beyond myself
-    
     webbrowser.open("https://accounts.spotify.com/authorize?" + urlencode(auth_headers))
 
-    # auth_code = json.loads(r.text)['code']
-
-    # Now we create an access token with the auth code
     return 'asdf'
 
-if __name__ == '__main__': 
-    create_token()
+def create_auth_token(auth_code):
+    """gets a spotift token using an authorization code"""
+    client_id = getenv('CLIENT_ID')
+    client_secret = getenv('CLIENT_SECRET')
+
+    encoded_credentials = base64.b64encode(client_id.encode() + b':' + client_secret.encode()).decode("utf-8")
+
+    url = "https://accounts.spotify.com/api/token"
+    headers = {
+        "Authorization": "Basic " + encoded_credentials,
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+        "grant_type": "authorization_code",
+        "code": auth_code,
+        "redirect_uri": "http://localhost:3000"
+    }
+    print('code here:   ' + auth_code)
+    r = requests.post(url, headers=headers, data=data)
+    print(json.loads(r.text).get('access_token'))
+    # return json.loads(r.text)['access_token']
+
+    return json.loads(r.text).get('access_token')
+
