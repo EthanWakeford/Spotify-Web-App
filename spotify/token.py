@@ -64,10 +64,11 @@ def create_auth_token(auth_code):
         "code": auth_code,
         "redirect_uri": "http://localhost:3000"
     }
-    print('code here:   ' + auth_code)
-    r = requests.post(url, headers=headers, data=data)
-    print(json.loads(r.text).get('access_token'))
-    # return json.loads(r.text)['access_token']
 
-    return json.loads(r.text).get('access_token')
+    r = requests.post(url, headers=headers, data=data)
+
+    access_token = json.loads(r.text).get('access_token')
+    refresh_token = json.loads(r.text).get('refresh_token')
+
+    return {'access_token': access_token, 'refresh_token': refresh_token}
 

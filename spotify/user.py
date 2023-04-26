@@ -2,6 +2,7 @@
 
 import requests
 from spotify.token import create_auth_token, create_token, create_auth_code
+import json
 
 def get_user():
     """querys the spotify api to retrive user info"""
@@ -14,8 +15,12 @@ def get_user():
 
 def get_me(auth_code):
     """gets info about current user, uses auth code and acesses private info"""
-    token = create_auth_token(auth_code)
+    tokens = create_auth_token(auth_code)
+    access_token = tokens.get('access_token')
+    refresh_token = tokens.get('refresh_token')
 
     url = 'https://api.spotify.com/v1/me'
-    r = requests.get(url, headers={'Authorization': f'Bearer {token}'})
-    return r.text
+    r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
+
+    return_package = {'refresh_token': refresh_token, 'response': r.text}
+    return json.dumps(return_package)
