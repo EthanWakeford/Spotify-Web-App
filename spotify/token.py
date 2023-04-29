@@ -72,3 +72,25 @@ def create_auth_token(auth_code):
 
     return {'access_token': access_token, 'refresh_token': refresh_token}
 
+def refresh_auth(refresh_token):
+    """creates an access token using a refresh token from te spotify api"""
+    client_id = getenv('CLIENT_ID')
+    client_secret = getenv('CLIENT_SECRET')
+
+    encoded_credentials = base64.b64encode(client_id.encode() + b':' + client_secret.encode()).decode("utf-8")
+
+    url = 'https://accounts.spotify.com/api/token'
+    headers = {
+        "Authorization": "Basic " + encoded_credentials,
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+    "grant_type": "refresh_token",
+        "refresh_token": refresh_token
+    }
+
+    r = requests.post(url, headers=headers, data=data)
+    access_token = json.loads(r.text).get('access_token')
+    print('\n' + r.text)
+
+    return {'access_token': access_token, 'refresh_token': refresh_token}

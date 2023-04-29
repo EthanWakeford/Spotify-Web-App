@@ -1,7 +1,7 @@
 """different functions to get info about users"""
 
 import requests
-from spotify.token import create_auth_token, create_token, create_auth_code
+from spotify.token import create_auth_token, create_token, create_auth_code, refresh_auth
 import json
 
 def get_user():
@@ -13,9 +13,12 @@ def get_user():
     r = requests.get(url, headers={'Authorization': f'Bearer {token}'})
     return r.text
 
-def get_me(auth_code):
+def get_me(auth_code, refresh_token):
     """gets info about current user, uses auth code and acesses private info"""
-    tokens = create_auth_token(auth_code)
+    if refresh_token:
+        tokens = refresh_auth(refresh_token)
+    else:
+        tokens = create_auth_token(auth_code)
     access_token = tokens.get('access_token')
     refresh_token = tokens.get('refresh_token')
 

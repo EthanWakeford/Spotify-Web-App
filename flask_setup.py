@@ -31,10 +31,13 @@ def user():
     return spotify.user.get_user()
 
 
-@app.route('/api/me/<auth_code>', methods=['GET'])
-def me(auth_code=''):
+@app.route('/api/me/', methods=['GET'])
+def me():
     """gets info about current user"""
-    return spotify.user.get_me(auth_code)
+    auth_code = request.args.get('authCode')
+    refresh_token = request.args.get('refreshToken')
+    print(auth_code, refresh_token)
+    return spotify.user.get_me(auth_code, refresh_token)
 
 
 @app.route('/api/log_in', methods=['GET'])

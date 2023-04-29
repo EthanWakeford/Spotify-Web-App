@@ -1,6 +1,5 @@
 $(document).ready(function () {
   const authCode = getAuthCode();
-
   if (!authCode) {
     $(".logged_out").css("display", "block");
   } else {
@@ -57,16 +56,19 @@ function getUser() {
 
 function getMe(authCode) {
   //gets info about current user, redirects to spotify page for user to allow access to private info
+  const refreshToken = sessionStorage.getItem('refreshToken');
   $.ajax({
-    url: `http://localhost:3000/api/me/${authCode}`,
+    url: `http://localhost:3000/api/me`,
     method: "GET",
+    data: {authCode: authCode, refreshToken: refreshToken},
     success: function (response) {
       const refreshToken = JSON.parse(response).refresh_token;
-      sessionStorage.setItem("refeshToken", refreshToken);
+      console.log(refreshToken);
+      sessionStorage.setItem("refreshToken", refreshToken);
       
       const userData = JSON.parse(JSON.parse(response).response);
       console.log("sucessful me", userData, typeof userData);
-      $(".logged_in h1").text(`Welcome ${userData.display_name}`);
+      $('.logged_in').prepend(`<h1>Welcome ${userData.display_name}</h1>`);
     },
     error: function () {
       console.log("failed me query");
