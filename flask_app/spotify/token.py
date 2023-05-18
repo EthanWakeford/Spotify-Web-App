@@ -9,6 +9,7 @@ import webbrowser
 from urllib.parse import urlencode
 import base64
 
+
 def create_token(*args):
     """Creates a spotify token from given envrionment variables
     args are the scopes to be passed to the created token"""
@@ -32,7 +33,7 @@ def create_token(*args):
 def create_auth_code(*args):
     """ Creates a spotify authorization code and an access token,
     args are the scopes passed to the auth code"""
-    
+
     # first we create an authorization code
     client_id = getenv('CLIENT_ID')
     url = 'https://accounts.spotify.com/authorize'
@@ -43,16 +44,19 @@ def create_auth_code(*args):
         'scope': 'user-read-private user-read-email'
     }
     # maybe add a state scope if this is ever used for anything beyond myself
-    webbrowser.open("https://accounts.spotify.com/authorize?" + urlencode(auth_headers))
+    webbrowser.open("https://accounts.spotify.com/authorize?" +
+                    urlencode(auth_headers))
 
     return 'asdf'
+
 
 def create_auth_token(auth_code):
     """gets a spotift token using an authorization code"""
     client_id = getenv('CLIENT_ID')
     client_secret = getenv('CLIENT_SECRET')
 
-    encoded_credentials = base64.b64encode(client_id.encode() + b':' + client_secret.encode()).decode("utf-8")
+    encoded_credentials = base64.b64encode(
+        client_id.encode() + b':' + client_secret.encode()).decode("utf-8")
 
     url = "https://accounts.spotify.com/api/token"
     headers = {
@@ -72,12 +76,14 @@ def create_auth_token(auth_code):
 
     return {'access_token': access_token, 'refresh_token': refresh_token}
 
+
 def refresh_auth(refresh_token):
     """creates an access token using a refresh token from te spotify api"""
     client_id = getenv('CLIENT_ID')
     client_secret = getenv('CLIENT_SECRET')
 
-    encoded_credentials = base64.b64encode(client_id.encode() + b':' + client_secret.encode()).decode("utf-8")
+    encoded_credentials = base64.b64encode(
+        client_id.encode() + b':' + client_secret.encode()).decode("utf-8")
 
     url = 'https://accounts.spotify.com/api/token'
     headers = {
@@ -85,7 +91,7 @@ def refresh_auth(refresh_token):
         "Content-Type": "application/x-www-form-urlencoded"
     }
     data = {
-    "grant_type": "refresh_token",
+        "grant_type": "refresh_token",
         "refresh_token": refresh_token
     }
 
