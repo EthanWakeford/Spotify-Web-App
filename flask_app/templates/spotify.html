@@ -4,33 +4,27 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../static/styles.css">
+  <link rel="stylesheet" href="../static/css/styles.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-  <script src="static/get_spotify.js"></script>
+  <script type="module" src="../static/js/main.js"></script>
   <title>Spotify searcher</title>
   <script></script>
 </head>
 <body>
-  <div class="logged_out">`
+  <div class="logged_out">
     <h1>Spotify</h1>
     <h3>Hello, log yourself in here</h3>
     <div class="me">
-      <form onsubmit="logIn();return false">
-        <input type="submit" value="Log me in">
-      </form>
+      <button class="logIn">Log Me In</button>
     </div>
   </div>
   <div class="logged_in">
     <div class="artists">
-      <form>
-        <input type="submit" value="get artist">
-      </form>
+      <button>Get Artist</button>
     </div>
     <hr>
     <div class="recommendations">
-      <form onsubmit="getRecommendations();return false">
-        <input type="submit" value="Get recommendations">
-      </form>
+      <button>Get recommendations</button>
     </div>
     <hr>
     
