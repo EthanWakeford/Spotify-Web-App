@@ -1,39 +1,36 @@
 $(document).ready(function () {
-  const authCode = getAuthCode();
-  if (!authCode) {
-    $(".logged_out").css("display", "block");
-  } else {
+  //global variables
+  refreshToken = localStorage.getItem("refreshToken");
+  authCode = getAuthCode();
+
+  if (authCode || refreshToken) {
     $(".logged_in").css("display", "block");
     getMe(authCode);
+  } else {
+    $(".logged_out").css("display", "block");
   }
 });
 
 function addListeners() {
   //adds listeners for certain elements
-  $('.artists form').on("submit",function() {
-    alert('submittin');
+  $(".artists form").on("submit", function () {
+    alert("submittin");
     getArtist();
-  })
+  });
 }
 
 function getAuthCode() {
-  // retrives the users spotify authcode from session storage or url, if present in url the stores in session storage
-  let authCode = sessionStorage.getItem("code");
-  if (authCode) {
-    return authCode;
-  }
-
+  // retrives the users spotify authcode from url and returns it
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
   authCode = urlParams.get("code");
 
-  sessionStorage.setItem("authCode", authCode);
   return authCode;
 }
 
 function logIn() {
-  // logs the users into the spotify API, or creates a button for the user to sign in
+  //gets authcode from spotify for OAuth, expects redirect to allow scopes then to new page
   $.ajax({
     url: "http://localhost:3000/api/log_in",
     method: "GET",
@@ -62,16 +59,23 @@ function getUser() {
   });
 }
 
-function getMe(authCode) {
-  //gets info about current user, redirects to spotify page for user to allow access to private info
-  const refreshToken = sessionStorage.getItem("refreshToken");
+function getMe() {
+  /* gets info about current user from spotify, either authcode will exist in url, or 
+  refresh token will be in local storage, only one is needed for this function to work,
+  authcode is only to be used once, then refresh token in the return is added to local storage
+  and the used for all future requests */
+  console.log(refreshToken, authCode)
   $.ajax({
     url: `http://localhost:3000/api/me`,
     method: "GET",
     data: { authCode: authCode, refreshToken: refreshToken },
     success: function (response) {
-      const refreshToken = JSON.parse(response).refresh_token;
-      sessionStorage.setItem("refreshToken", refreshToken);
+      if (refreshToken === 'null') {
+        /* if refresh token does NOT exist already in local storage, add
+        returned refresh token to local storage */
+        refreshToken = JSON.parse(response).refresh_token;
+        localStorage.setItem("refreshToken", refreshToken);
+      }
 
       const userData = JSON.parse(JSON.parse(response).response);
       console.log("sucessful me", userData, typeof userData);
