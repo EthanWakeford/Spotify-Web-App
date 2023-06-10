@@ -64,17 +64,17 @@ function getMe() {
   refresh token will be in local storage, only one is needed for this function to work,
   authcode is only to be used once, then refresh token in the return is added to local storage
   and the used for all future requests */
+  console.log(refreshToken, authCode)
   $.ajax({
     url: `http://localhost:3000/api/me`,
     method: "GET",
     data: { authCode: authCode, refreshToken: refreshToken },
     success: function (response) {
-      if (!refreshToken) {
+      if (refreshToken === 'null') {
         /* if refresh token does NOT exist already in local storage, add
         returned refresh token to local storage */
         refreshToken = JSON.parse(response).refresh_token;
         localStorage.setItem("refreshToken", refreshToken);
-        console.log('new refresh: ' + refreshToken)
       }
 
       const userData = JSON.parse(JSON.parse(response).response);

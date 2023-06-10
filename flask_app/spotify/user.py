@@ -16,9 +16,9 @@ def get_user():
 
 
 def get_me(auth_code, refresh_token):
-    """gets info about current user, uses auth code and acesses private info"""
-    #uses refresh token if available, otherwise creates a new token/refresh token
-    if refresh_token:
+    """gets info about current user, uses auth code and acesses private info, 
+    uses refresh token if available, otherwise creates a new token/refresh token"""
+    if refresh_token != 'null':
         tokens = refresh_auth(refresh_token)
     else:
         tokens = create_auth_token(auth_code)
