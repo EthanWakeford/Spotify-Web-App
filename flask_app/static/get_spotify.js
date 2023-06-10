@@ -1,38 +1,22 @@
 $(document).ready(function () {
-  
-  
-  let refreshToken = localStorage.getItem('refreshToken');
-  const authCode = getAuthCode();
-  if (!authCode) {
-    $(".logged_out").css("display", "block");
-  } else {
+  //global variables
+  refreshToken = localStorage.getItem("refreshToken");
+  authCode = getAuthCode();
+
+  if (authCode || refreshToken) {
     $(".logged_in").css("display", "block");
     getMe(authCode);
-    getMeRefresh(refreshToken);
+  } else {
+    $(".logged_out").css("display", "block");
   }
-  
-  // if (refreshToken) {
-  //   //getMe with refresh
-  //   $(".logged_in").css("display", "block");
-  //   getMe(refreshToken)
-  // } else if (authCode) {
-  //   //getMe with authCode, store new refresh token after return
-  //   $(".logged_in").css("display", "block");
-  //   getMe(authCode);
-  // } else {
-  //   $(".logged_out").css("display", "block");
-  // }
-  
-
-
 });
 
 function addListeners() {
   //adds listeners for certain elements
-  $('.artists form').on("submit",function() {
-    alert('submittin');
+  $(".artists form").on("submit", function () {
+    alert("submittin");
     getArtist();
-  })
+  });
 }
 
 function getAuthCode() {
@@ -75,23 +59,23 @@ function getUser() {
   });
 }
 
-function getMeRefresh(refreshToken) {
-  //runs get me function using refresh token, already in scope I believe??
-  console.log(refreshToken);
-}
-
-
-
-function getMe(authCode) {
-  //gets info about current user from spotify
-  const refreshToken = sessionStorage.getItem("refreshToken");
+function getMe() {
+  /* gets info about current user from spotify, either authcode will exist in url, or 
+  refresh token will be in local storage, only one is needed for this function to work,
+  authcode is only to be used once, then refresh token in the return is added to local storage
+  and the used for all future requests */
   $.ajax({
     url: `http://localhost:3000/api/me`,
     method: "GET",
     data: { authCode: authCode, refreshToken: refreshToken },
     success: function (response) {
-      const refreshToken = JSON.parse(response).refresh_token;
-      localStorage.setItem("refreshToken", refreshToken);
+      if (!refreshToken) {
+        /* if refresh token does NOT exist already in local storage, add
+        returned refresh token to local storage */
+        refreshToken = JSON.parse(response).refresh_token;
+        localStorage.setItem("refreshToken", refreshToken);
+        console.log('new refresh: ' + refreshToken)
+      }
 
       const userData = JSON.parse(JSON.parse(response).response);
       console.log("sucessful me", userData, typeof userData);
