@@ -3,8 +3,7 @@ $(document).ready(function () {
   refreshToken = localStorage.getItem("refreshToken");
   authCode = getAuthCode();
 
-  if (authCode || refreshToken) {
-    $(".logged_in").css("display", "block");
+  if (authCode || (refreshToken && refreshToken !== 'null')) {
     getMe(authCode);
   } else {
     $(".logged_out").css("display", "block");
@@ -70,7 +69,7 @@ function getMe() {
     method: "GET",
     data: { authCode: authCode, refreshToken: refreshToken },
     success: function (response) {
-      if (refreshToken === 'null') {
+      if (!refreshToken || refreshToken === 'null') {
         /* if refresh token does NOT exist already in local storage, add
         returned refresh token to local storage */
         refreshToken = JSON.parse(response).refresh_token;
@@ -79,10 +78,13 @@ function getMe() {
 
       const userData = JSON.parse(JSON.parse(response).response);
       console.log("sucessful me", userData, typeof userData);
+      $(".logged_in").css("display", "block");
       $(".logged_in").prepend(`<h1>Welcome ${userData.display_name}</h1>`);
     },
     error: function () {
-      console.log("failed me query");
+    $(".logged_out").css("display", "block");
+    alert('Log in Attempt Failed');
+    console.log("failed me query");
     },
   });
 }

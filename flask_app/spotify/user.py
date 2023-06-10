@@ -18,7 +18,7 @@ def get_user():
 def get_me(auth_code, refresh_token):
     """gets info about current user, uses auth code and acesses private info, 
     uses refresh token if available, otherwise creates a new token/refresh token"""
-    if refresh_token != 'null':
+    if refresh_token and refresh_token != 'null':
         tokens = refresh_auth(refresh_token)
     else:
         tokens = create_auth_token(auth_code)
@@ -27,6 +27,9 @@ def get_me(auth_code, refresh_token):
 
     url = 'https://api.spotify.com/v1/me'
     r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
+
+    if r.status_code == 401:
+        r.raise_for_status()
 
     return_package = {'refresh_token': refresh_token, 'response': r.text}
     return json.dumps(return_package)

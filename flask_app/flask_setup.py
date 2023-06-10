@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 """ runs a flask server """
-from flask import Flask, render_template, make_response, request
+from flask import Flask, render_template, make_response, request, abort
 import spotify
+import requests
+
 
 app = Flask(__name__)
 
@@ -36,8 +38,10 @@ def me():
     """gets info about current user"""
     auth_code = request.args.get('authCode')
     refresh_token = request.args.get('refreshToken')
-    print(auth_code, refresh_token)
-    return spotify.user.get_me(auth_code, refresh_token)
+    try:
+        return spotify.user.get_me(auth_code, refresh_token)
+    except requests.exceptions.HTTPError:
+        abort(400)
 
 
 @app.route('/api/log_in', methods=['GET'])
