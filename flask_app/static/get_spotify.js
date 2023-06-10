@@ -1,11 +1,30 @@
 $(document).ready(function () {
+  
+  
+  let refreshToken = localStorage.getItem('refreshToken');
   const authCode = getAuthCode();
   if (!authCode) {
     $(".logged_out").css("display", "block");
   } else {
     $(".logged_in").css("display", "block");
     getMe(authCode);
+    getMeRefresh(refreshToken);
   }
+  
+  // if (refreshToken) {
+  //   //getMe with refresh
+  //   $(".logged_in").css("display", "block");
+  //   getMe(refreshToken)
+  // } else if (authCode) {
+  //   //getMe with authCode, store new refresh token after return
+  //   $(".logged_in").css("display", "block");
+  //   getMe(authCode);
+  // } else {
+  //   $(".logged_out").css("display", "block");
+  // }
+  
+
+
 });
 
 function addListeners() {
@@ -17,23 +36,17 @@ function addListeners() {
 }
 
 function getAuthCode() {
-  // retrives the users spotify authcode from session storage or url, if present in url the stores in session storage
-  let authCode = sessionStorage.getItem("code");
-  if (authCode) {
-    return authCode;
-  }
-
+  // retrives the users spotify authcode from url and returns it
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
   authCode = urlParams.get("code");
 
-  sessionStorage.setItem("authCode", authCode);
   return authCode;
 }
 
 function logIn() {
-  // logs the users into the spotify API, or creates a button for the user to sign in
+  //gets authcode from spotify for OAuth, expects redirect to allow scopes then to new page
   $.ajax({
     url: "http://localhost:3000/api/log_in",
     method: "GET",
@@ -62,8 +75,15 @@ function getUser() {
   });
 }
 
+function getMeRefresh(refreshToken) {
+  //runs get me function using refresh token, already in scope I believe??
+  console.log(refreshToken);
+}
+
+
+
 function getMe(authCode) {
-  //gets info about current user, redirects to spotify page for user to allow access to private info
+  //gets info about current user from spotify
   const refreshToken = sessionStorage.getItem("refreshToken");
   $.ajax({
     url: `http://localhost:3000/api/me`,
@@ -71,7 +91,7 @@ function getMe(authCode) {
     data: { authCode: authCode, refreshToken: refreshToken },
     success: function (response) {
       const refreshToken = JSON.parse(response).refresh_token;
-      sessionStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("refreshToken", refreshToken);
 
       const userData = JSON.parse(JSON.parse(response).response);
       console.log("sucessful me", userData, typeof userData);
