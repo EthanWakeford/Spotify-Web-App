@@ -2,6 +2,7 @@
 import requests
 from spotify.token import create_token
 
+
 def get_recommendations(**kwargs):
     """gets the recommendations, *args are the url parameters"""
     url = 'https://api.spotify.com/v1/recommendations'
@@ -19,7 +20,6 @@ def get_recommendations(**kwargs):
         # 'Accept': 'application/json',
         # 'Content-Type': 'application/json'
     }
-
 
     r = requests.get(url, params=payload, headers=headers)
 

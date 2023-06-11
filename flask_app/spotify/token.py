@@ -36,7 +36,6 @@ def create_auth_code(*args):
 
     # first we create an authorization code
     client_id = getenv('CLIENT_ID')
-    url = 'https://accounts.spotify.com/authorize'
     auth_headers = {
         'client_id': client_id,
         'response_type': 'code',
