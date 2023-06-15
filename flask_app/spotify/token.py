@@ -30,7 +30,7 @@ def create_token(*args):
     return json.loads(r.text)['access_token']
 
 
-def create_auth_code(*args):
+def create_auth_code(scopes):
     """ Creates a spotify authorization code and an access token,
     args are the scopes passed to the auth code"""
 
@@ -40,7 +40,7 @@ def create_auth_code(*args):
         'client_id': client_id,
         'response_type': 'code',
         'redirect_uri': 'http://localhost:3000',
-        'scope': 'user-read-private user-read-email'
+        'scope': scopes
     }
     # maybe add a state scope if this is ever used for anything beyond myself
     webbrowser.open("https://accounts.spotify.com/authorize?" +

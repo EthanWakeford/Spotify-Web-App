@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ runs a flask server """
-from flask import Flask, render_template, make_response, request, abort
+from flask import Flask, render_template, request, abort
 import spotify
 import requests
 
@@ -46,8 +46,10 @@ def me():
 
 @app.route('/api/log_in', methods=['GET'])
 def log_in():
-    """logs the user into spotfys api"""
-    return spotify.token.create_auth_code('user-read-private', 'user-read-email')
+    """logs the user into spotfys api, scopes get added from url parameters"""
+    scopes = request.args.get('scopes')
+
+    return spotify.token.create_auth_code(scopes)
 
 
 @app.route('/api/artists', methods=['GET'])

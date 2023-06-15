@@ -16,6 +16,7 @@ export function logIn() {
   $.ajax({
     url: "http://localhost:3000/api/log_in",
     method: "GET",
+    data: { scopes: 'user-read-private user-read-email' },
     success: function (response) {
       console.log(response);
     },
