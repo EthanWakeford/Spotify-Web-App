@@ -1,6 +1,7 @@
 import requests
 from spotify.token import create_token
 
+
 def get_artist():
     """querys the spotify api to retrive artist info"""
 

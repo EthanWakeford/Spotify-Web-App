@@ -10,9 +10,8 @@ from urllib.parse import urlencode
 import base64
 
 
-def create_token(*args):
-    """Creates a spotify token from given envrionment variables
-    args are the scopes to be passed to the created token"""
+def create_token():
+    """Creates a spotify access token from given envrionment variables"""
 
     client_id = getenv('CLIENT_ID')
     client_secret = getenv('CLIENT_SECRET')
@@ -30,20 +29,19 @@ def create_token(*args):
     return json.loads(r.text)['access_token']
 
 
-def create_auth_code(*args):
+def create_auth_code(scopes):
     """ Creates a spotify authorization code and an access token,
     args are the scopes passed to the auth code"""
 
     # first we create an authorization code
     client_id = getenv('CLIENT_ID')
-    url = 'https://accounts.spotify.com/authorize'
     auth_headers = {
         'client_id': client_id,
         'response_type': 'code',
         'redirect_uri': 'http://localhost:3000',
-        'scope': 'user-read-private user-read-email'
+        'scope': scopes
     }
-    # maybe add a state scope if this is ever used for anything beyond myself
+    # Open spotfiy page for OAuth flow
     webbrowser.open("https://accounts.spotify.com/authorize?" +
                     urlencode(auth_headers))
 
@@ -51,7 +49,7 @@ def create_auth_code(*args):
 
 
 def create_auth_token(auth_code):
-    """gets a spotift token using an authorization code"""
+    """gets a spotify token using an authorization code"""
     client_id = getenv('CLIENT_ID')
     client_secret = getenv('CLIENT_SECRET')
 
@@ -78,7 +76,7 @@ def create_auth_token(auth_code):
 
 
 def refresh_auth(refresh_token):
-    """creates an access token using a refresh token from te spotify api"""
+    """creates an access token using a refresh token from the spotify api"""
     client_id = getenv('CLIENT_ID')
     client_secret = getenv('CLIENT_SECRET')
 
@@ -97,6 +95,5 @@ def refresh_auth(refresh_token):
 
     r = requests.post(url, headers=headers, data=data)
     access_token = json.loads(r.text).get('access_token')
-    print('\n' + r.text)
 
     return {'access_token': access_token, 'refresh_token': refresh_token}

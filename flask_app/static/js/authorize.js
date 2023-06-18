@@ -16,6 +16,7 @@ export function logIn() {
   $.ajax({
     url: "http://localhost:3000/api/log_in",
     method: "GET",
+    data: { scopes: 'user-read-private user-read-email' },
     success: function (response) {
       console.log(response);
     },
@@ -31,13 +32,13 @@ export function getMe(authCode, refreshToken) {
   refresh token will be in local storage, only one is needed for this function to work,
   authcode is only to be used once, then refresh token in the return is added to local storage
   and the used for all future requests */
-  console.log(refreshToken, authCode)
+  console.log(refreshToken, authCode);
   $.ajax({
     url: `http://localhost:3000/api/me`,
     method: "GET",
     data: { authCode: authCode, refreshToken: refreshToken },
     success: function (response) {
-      if (!refreshToken || refreshToken === 'null') {
+      if (!refreshToken || refreshToken === "null") {
         /* if refresh token does NOT exist already in local storage, add
         returned refresh token to local storage */
         refreshToken = JSON.parse(response).refresh_token;
@@ -53,7 +54,7 @@ export function getMe(authCode, refreshToken) {
     },
     error: function () {
       $(".logged_out").css("display", "block");
-      alert('Log in Attempt Failed');
+      alert("Log in Attempt Failed");
       console.log("failed me query");
     },
   });

@@ -1,5 +1,10 @@
-import { getMe, getAuthCode, logIn } from './authorize.js';
-import { getUser, getArtist, placeArtist, getRecommendations } from './spotify.js';
+import { getMe, getAuthCode, logIn } from "./authorize.js";
+import {
+  getUser,
+  getArtist,
+  placeArtist,
+  getRecommendations,
+} from "./spotify.js";
 
 $(document).ready(function () {
   //global variables
@@ -7,23 +12,23 @@ $(document).ready(function () {
   const authCode = getAuthCode();
 
   //if authcode in URL or refresh token in storage, try getting user data from spotify
-  if (authCode || (refreshToken && refreshToken !== 'null')) {
+  if (authCode || (refreshToken && refreshToken !== "null")) {
     getMe(authCode, refreshToken);
     addListeners();
   } else {
     $(".logged_out").css("display", "block");
-    $('.logIn').click(function() {
+    $(".logIn").click(function () {
       logIn();
-    })
+    });
   }
 });
 
-function addListeners() { 
+function addListeners() {
   //adds listeners for certain elements
   $(".artists button").click(function () {
     getArtist();
   });
-  $('.recommendations button').click(function () {
+  $(".recommendations button").click(function () {
     getRecommendations();
-  })
+  });
 }

@@ -1,7 +1,7 @@
 """different functions to get info about users"""
 
 import requests
-from spotify.token import create_auth_token, create_token, create_auth_code, refresh_auth
+from spotify.token import create_auth_token, create_token, refresh_auth
 import json
 
 
@@ -16,7 +16,7 @@ def get_user():
 
 
 def get_me(auth_code, refresh_token):
-    """gets info about current user, uses auth code and acesses private info, 
+    """gets info about current user, uses auth code and acesses private info,
     uses refresh token if available, otherwise creates a new token/refresh token"""
     if refresh_token and refresh_token != 'null':
         tokens = refresh_auth(refresh_token)
