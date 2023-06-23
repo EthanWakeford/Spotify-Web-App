@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 """ runs a flask server """
 from flask import Flask, render_template, request, abort
+from flask_cors import CORS
 import spotify
 import requests
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
