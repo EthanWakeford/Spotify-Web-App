@@ -12,7 +12,7 @@ export default function App() {
     return fetch(
       '/api/me?' +
         new URLSearchParams({
-          authCode: authCode,
+          authCode: (token ? '' : authCode),
           refreshToken: token,
         })
     );
@@ -24,7 +24,6 @@ export default function App() {
         return;
       }
       console.log('effecting');
-      try {
         getMe(token, authCode)
           .then((res) => res.json())
           // .then(() => {
@@ -40,11 +39,11 @@ export default function App() {
               setToken(refreshToken);
             }
             setUserData(JSON.parse(data.response));
-          });
-      } catch (error) {
-        alert('login to spotify has failed');
-        console.error('login error: ', error);
-      }
+          })
+          .catch((error) => {
+            alert('login to spotify has failed');
+            console.error('login error: ', error)
+          })
     },
     [authCode, token]
   );
