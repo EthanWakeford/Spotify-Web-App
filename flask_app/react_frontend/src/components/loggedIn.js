@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function LoggedIn({ userData }) {
   return (
@@ -19,12 +19,12 @@ export function LoggedIn({ userData }) {
 export function LoggedOut() {
   function logMeIn() {
     fetch(
-      "/api/log_in?" +
+      '/api/log_in?' +
         new URLSearchParams({
-          scopes: "user-read-private user-read-email",
+          scopes: 'user-read-private user-read-email',
         })
     )
-      .then((res) => res.json())
+      .then((res) => res.text())
       .then((data) => {
         console.log(data);
       });
