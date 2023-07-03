@@ -10,8 +10,8 @@ def search(*args, **kwargs):
     defaults = {'type': ['album', 'artist', 'track'], 'limit': 10, 'offset': 0}
 
     payload = {'query': kwargs['query']}
-    for key, value in defaults.items():
-        payload[key] = kwargs[key] if key in kwargs else value
+    for key, default_value in defaults.items():
+        payload[key] = kwargs[key] if key in kwargs else default_value
 
     url = 'https://api.spotify.com/v1/search'
     token = create_token()

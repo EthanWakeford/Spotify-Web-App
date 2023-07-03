@@ -1,7 +1,6 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import { LoggedIn, LoggedOut } from './components/loggedIn';
-import useToken from './usetoken';
 
 export default function App() {
   const [userData, setUserData] = useState();
@@ -26,8 +25,7 @@ export default function App() {
         console.log('no api call');
         return;
       }
-      const code = authCode;
-      setAuthCode('');
+      // setAuthCode('');
       console.log('getting me');
       getMe(token, authCode)
         .then((res) => {

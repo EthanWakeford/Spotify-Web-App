@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { Searcher } from "./searcher";
 
 export function LoggedIn({ userData }) {
   return (
@@ -12,6 +12,7 @@ export function LoggedIn({ userData }) {
         <button>Get recommendations</button>
       </div>
       <hr />
+      <Searcher/>
     </>
   );
 }
