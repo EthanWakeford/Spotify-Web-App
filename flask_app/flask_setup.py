@@ -63,7 +63,10 @@ def artist():
 @app.route('/api/recommendations', methods=['GET'])
 def recommendations():
     """gets recommendations"""
-    return spotify.recommendation.get_recommendations()
+    url_args = {}
+    for key, value in request.args.items():
+        url_args[key] = value
+    return spotify.recommendation.get_recommendations(**url_args)
 
 
 @app.route('/api/searcher', methods=['GET'])

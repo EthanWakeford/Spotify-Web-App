@@ -68,6 +68,12 @@ class MyService {
         })
     );
   }
+
+  getRecommendations(recommendationParams) {
+    return fetch(
+      '/api/recommendations?' + new URLSearchParams(recommendationParams)
+    );
+  }
 }
 
 const apiHandler = new MyService();

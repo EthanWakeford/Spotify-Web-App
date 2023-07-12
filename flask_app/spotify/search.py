@@ -6,7 +6,7 @@ from spotify.token import create_token
 def search(*args, **kwargs):
     """uses the spotify API search tool"""
     if 'query' not in kwargs:
-        Exception('No query')
+        raise Exception('No query')
     defaults = {'type': ['album', 'artist', 'track'], 'limit': 10, 'offset': 0}
 
     payload = {'query': kwargs['query']}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Recommendations } from './recommendations';
 import apiHandler from '../services/myService';
 
 export function Searcher() {
@@ -28,7 +29,7 @@ export function Searcher() {
       alert('You must enter search query');
       return;
     }
-    console.log(resultOffset)
+    console.log(resultOffset);
     apiHandler
       .searchSpotify(query, 4, resultOffset)
       .then((res) => res.json())
@@ -59,13 +60,17 @@ export function Searcher() {
         <button type='submit' onClick={searchSubmit}>
           Search
         </button>
-        <button type='submit' onClick={searchNextPage}>More Results</button>
-        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+        <button type='submit' onClick={searchNextPage}>
+          More Results
+        </button>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           <SearchResult result={searchResults.albums.items[0]} />
           <SearchResult result={searchResults.albums.items[1]} />
           <SearchResult result={searchResults.albums.items[2]} />
           <SearchResult result={searchResults.albums.items[3]} />
         </div>
+        <br />
+        <Recommendations />
       </>
     );
   } else {
@@ -95,9 +100,9 @@ export function Searcher() {
 
 function SearchResult({ result }) {
   return (
-    <div style={{margin: '0 20px'}}>
+    <div style={{ margin: '0 20px' }}>
       <img src={result.images[1].url} alt={result.name}></img>
-      <div style={{display: 'flex', flexDirection: 'column'}}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <h4>{result.name}</h4>
         <h6>{result.artists[0].name}</h6>
       </div>
