@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Recommendations } from './recommendations';
+import { SearchResult, RecommendationResult } from './searchResults';
 import apiHandler from '../services/myService';
 
 export function Searcher() {
   const [searchResults, setSearchResults] = useState();
   const [resultOffset, setResultOffset] = useState(0);
   const [query, setQuery] = useState('');
+  const [seedSelection, setSeedSelection] = useState([]);
+  const [recommendationResults, setRecommendationResults] = useState();
+
 
   function searchSubmit(e) {
     if (query === '') {
@@ -40,6 +44,14 @@ export function Searcher() {
       });
   }
 
+  function resultSelected(resultId) {
+    if (seedSelection.includes(resultId)) {
+      setSeedSelection(seedSelection.filter((id) => id !== resultId));
+    } else {
+      setSeedSelection([...seedSelection, resultId]);
+    }
+  }
+
   if (searchResults) {
     return (
       <>
@@ -64,13 +76,41 @@ export function Searcher() {
           More Results
         </button>
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          <SearchResult result={searchResults.albums.items[0]} />
-          <SearchResult result={searchResults.albums.items[1]} />
-          <SearchResult result={searchResults.albums.items[2]} />
-          <SearchResult result={searchResults.albums.items[3]} />
+          <SearchResult
+            result={searchResults.artists.items[0]}
+            seedSelection={seedSelection}
+            customOnClick={() =>
+              resultSelected(searchResults.artists.items[0].id)
+            }
+          />
+          <SearchResult
+            result={searchResults.artists.items[1]}
+            seedSelection={seedSelection}
+            customOnClick={() =>
+              resultSelected(searchResults.artists.items[1].id)
+            }
+          />
+          <SearchResult
+            result={searchResults.artists.items[2]}
+            seedSelection={seedSelection}
+            customOnClick={() =>
+              resultSelected(searchResults.artists.items[2].id)
+            }
+          />
+          <SearchResult
+            result={searchResults.artists.items[3]}
+            seedSelection={seedSelection}
+            customOnClick={() =>
+              resultSelected(searchResults.artists.items[3].id)
+            }
+          />
         </div>
         <br />
-        <Recommendations />
+        <Recommendations
+          seedSelection={seedSelection}
+          setRecommendationResults={setRecommendationResults}
+        />
+        {recommendationResults ? (<RecommendationResult result={recommendationResults} />) : <></>}
       </>
     );
   } else {
@@ -96,16 +136,4 @@ export function Searcher() {
       </>
     );
   }
-}
-
-function SearchResult({ result }) {
-  return (
-    <div style={{ margin: '0 20px' }}>
-      <img src={result.images[1].url} alt={result.name}></img>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <h4>{result.name}</h4>
-        <h6>{result.artists[0].name}</h6>
-      </div>
-    </div>
-  );
 }

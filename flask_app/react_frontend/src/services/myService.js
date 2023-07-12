@@ -70,6 +70,7 @@ class MyService {
   }
 
   getRecommendations(recommendationParams) {
+    console.log(recommendationParams)
     return fetch(
       '/api/recommendations?' + new URLSearchParams(recommendationParams)
     );

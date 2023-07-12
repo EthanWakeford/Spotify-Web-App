@@ -1,15 +1,22 @@
 import { useState } from 'react';
+import { SearchResult } from './searchResults';
 import apiHandler from '../services/myService';
 
-export function Recommendations() {
+export function Recommendations({ seedSelection, setRecommendationResults }) {
   function getRecommendations() {
     apiHandler
-      .getRecommendations({ seed_artists: '6U1lmwvy3I9dIYu9RalJi6' })
+      .getRecommendations({ seed_artists: seedSelection.join(',') })
       .then((res) => {
-        console.log(res)
-        return res.json()})
+        console.log(res);
+        return res.json();
+      })
       .then((data) => {
-        console.log(data);
+        console.log(data)
+        if (data.tracks) {
+          setRecommendationResults(data.tracks[0])
+        } else {
+        setRecommendationResults(data.artists[0])
+        }
       });
   }
 
