@@ -1,57 +1,37 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import { LoggedIn, LoggedOut } from './components/loggedIn';
+import apiHandler from './services/myService';
 
 export default function App() {
   const [userData, setUserData] = useState();
-  const [token, setToken] = useState(getToken());
-  const [authCode, setAuthCode] = useState(getAuthCode());
-
-  function getMe(token, authCode) {
-    console.log('fetching');
-    return fetch(
-      '/api/me?' +
-        new URLSearchParams({
-          authCode: token ? '' : authCode,
-          refreshToken: token,
-        })
-    );
-  }
 
   useEffect(
     function () {
-      console.log('effecting', authCode);
-      if (userData || (!token && !authCode)) {
+      if (userData) {
         console.log('no api call');
         return;
       }
-      // setAuthCode('');
-      console.log('getting me');
-      getMe(token, authCode)
-        .then((res) => {
-          console.log(res.status);
-          return res.json();
-        })
-        // .then(() => {
-        //   setUserData({ display_name: 'Ethan' });
-        // });
+      apiHandler
+        .getMe()
+        .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          if (!token || token === 'null') {
-            /* if refresh token does NOT exist already in local storage, add
-          returned refresh token to local storage */
-            const refreshToken = data.refresh_token;
-            localStorage.setItem('refreshToken', refreshToken);
-            setToken(refreshToken);
-          }
           setUserData(JSON.parse(data.response));
         })
-        .catch((error) => {
-          alert('login to spotify has failed');
-          console.error('login error: ', error);
+        .catch((err) => {
+          console.log(err);
         });
+      // .then((data) => {
+      //   console.log(data);
+      //   if (!token || token === 'null') {
+      //     /* if refresh token does NOT exist already in local storage, add
+      //   returned refresh token to local storage */
+      //
+      //   }
+      //   setUserData(JSON.parse(data.response));
+      // })
     },
-    [authCode, token, userData]
+    [userData]
   );
 
   if (userData) {
@@ -76,4 +56,12 @@ function getToken() {
     return refreshToken;
   }
   return '';
+}
+
+function refreshTokenSetter(refreshToken) {
+  // sets the refresh token into local storage if not already present
+  // (or new one exists)
+
+  localStorage.setItem('refreshToken', refreshToken);
+  // setToken(refreshToken);
 }
