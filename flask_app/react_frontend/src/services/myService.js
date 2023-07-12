@@ -2,7 +2,7 @@
 // serverside API
 
 class MyService {
-  #AuthCodeUseCounter = 0;
+  #AuthCodeUsed = false;
   #AuthCode = this.getAuthCode();
   #RefreshToken = this.getRefreshToken();
 
@@ -10,17 +10,17 @@ class MyService {
     // queries the serverside api, prevents the authcode from being used
     // more than once
 
-    if (!this.#AuthCode && ! this.#RefreshToken) {
-      return Promise.reject('no login creds')
+    if (!this.#AuthCode && !this.#RefreshToken) {
+      return Promise.reject('no login creds');
     }
 
     if (this.#AuthCode && !this.#RefreshToken) {
-      if (this.#AuthCodeUseCounter > 0) {
+      if (this.#AuthCodeUsed) {
         this.#AuthCode = '';
         return Promise.reject('authcode can only be used once');
       }
 
-      this.#AuthCodeUseCounter += 1;
+      this.#AuthCodeUsed = true;
     }
 
     return fetch(
@@ -37,7 +37,7 @@ class MyService {
 
     if (!oldToken || oldToken !== refreshToken) {
       localStorage.setItem('refreshToken', refreshToken);
-      this.#RefreshToken = refreshToken
+      this.#RefreshToken = refreshToken;
     }
   }
 
@@ -56,6 +56,24 @@ class MyService {
       return refreshToken;
     }
     return '';
+  }
+
+  searchSpotify(query, limit, offset) {
+    return fetch(
+      '/api/searcher?' +
+        new URLSearchParams({
+          query: query,
+          limit: limit,
+          offset: offset,
+        })
+    );
+  }
+
+  getRecommendations(recommendationParams) {
+    console.log(recommendationParams)
+    return fetch(
+      '/api/recommendations?' + new URLSearchParams(recommendationParams)
+    );
   }
 }
 
