@@ -1,68 +1,106 @@
 import { useState } from 'react';
+import apiHandler from '../services/myService';
 
 export function Searcher() {
   const [searchResults, setSearchResults] = useState();
+  const [resultOffset, setResultOffset] = useState(0);
+  const [query, setQuery] = useState('');
 
-  // const [query, setQuery] = useState(
-  //   'The content of a textarea goes in the value attribute'
-  // );
-
-  function handleSubmit(e) {
-    // Prevent the browser from reloading the page
-    e.preventDefault();
-
-    const query = e.target[0].value;
-
+  function searchSubmit(e) {
     if (query === '') {
       alert('You must enter search query');
       return;
     }
 
-    fetch(
-      '/api/searcher?' +
-        new URLSearchParams({
-          query: query,
-          limit: 1,
-        })
-    )
+    apiHandler
+      .searchSpotify(query, 4, 0)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setSearchResults(data);
+        // next offset is always reset to 4
+        setResultOffset(4);
+      });
+  }
+
+  function searchNextPage(e) {
+    if (query === '') {
+      alert('You must enter search query');
+      return;
+    }
+    console.log(resultOffset)
+    apiHandler
+      .searchSpotify(query, 4, resultOffset)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setSearchResults(data);
+        setResultOffset(resultOffset + 4);
       });
   }
 
   if (searchResults) {
     return (
       <>
-        <form method='get' onSubmit={handleSubmit}>
-          <label>
-            Search Spotify
-            <br />
-            <textarea defaultValue={''} rows={1} cols={40} name='queryBox' />
-            <br />
-          </label>
-          <button type='submit'>Search</button>
-        </form>
-        <img
-          src={searchResults.albums.items[0].images[1].url}
-          alt={searchResults.albums.items[0].name}
-        ></img>
-        <h4>{searchResults.albums.items[0].name}</h4>
-        <h6>{searchResults.albums.items[0].artists[0].name}</h6>
+        <label>
+          Search Spotify
+          <br />
+          <textarea
+            defaultValue={''}
+            rows={1}
+            cols={40}
+            name='queryBox'
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
+          />
+          <br />
+        </label>
+        <button type='submit' onClick={searchSubmit}>
+          Search
+        </button>
+        <button type='submit' onClick={searchNextPage}>More Results</button>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          <SearchResult result={searchResults.albums.items[0]} />
+          <SearchResult result={searchResults.albums.items[1]} />
+          <SearchResult result={searchResults.albums.items[2]} />
+          <SearchResult result={searchResults.albums.items[3]} />
+        </div>
       </>
     );
   } else {
     return (
-      <form method='get' onSubmit={handleSubmit}>
+      <>
         <label>
           Search Spotify
           <br />
-          <textarea defaultValue={''} rows={1} cols={40} name='queryBox' />
+          <textarea
+            defaultValue={''}
+            rows={1}
+            cols={40}
+            name='queryBox'
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
+          />
           <br />
         </label>
-        <button type='submit'>Search</button>
-      </form>
+        <button type='submit' onClick={searchSubmit}>
+          Search
+        </button>
+      </>
     );
   }
+}
+
+function SearchResult({ result }) {
+  return (
+    <div style={{margin: '0 20px'}}>
+      <img src={result.images[1].url} alt={result.name}></img>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <h4>{result.name}</h4>
+        <h6>{result.artists[0].name}</h6>
+      </div>
+    </div>
+  );
 }

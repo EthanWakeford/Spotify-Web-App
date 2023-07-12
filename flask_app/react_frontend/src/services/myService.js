@@ -57,6 +57,17 @@ class MyService {
     }
     return '';
   }
+
+  searchSpotify(query, limit, offset) {
+    return fetch(
+      '/api/searcher?' +
+        new URLSearchParams({
+          query: query,
+          limit: limit,
+          offset: offset,
+        })
+    );
+  }
 }
 
 const apiHandler = new MyService();
