@@ -66,6 +66,18 @@ def recommendations():
     return spotify.recommendation.get_recommendations()
 
 
+@app.route('/api/searcher', methods=['GET'])
+def searcher():
+    """uses the spotify searcher"""
+    url_args = {}
+    for key, value in request.args.items():
+        url_args[key] = value
+    if 'type' in url_args:
+        url_args['type'] = url_args['type'].split(',')
+
+    return spotify.search.search(**url_args)
+
+
 if __name__ == "__main__":
     """ Main Function """
     app.run(host='localhost', port=3000)

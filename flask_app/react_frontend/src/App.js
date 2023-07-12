@@ -1,48 +1,29 @@
-import "./App.css";
-import { useEffect, useState } from "react";
-import { LoggedIn, LoggedOut } from "./components/loggedIn";
-import useToken from "./usetoken";
+import './App.css';
+import { useEffect, useState } from 'react';
+import { LoggedIn, LoggedOut } from './components/loggedIn';
+import apiHandler from './services/myService';
 
 export default function App() {
   const [userData, setUserData] = useState();
-  const [token, setToken] = useState(getToken());
-  const authCode = getAuthCode();
-
-  function getMe(token, authCode) {
-    return fetch(
-      "/api/me?" +
-        new URLSearchParams({
-          authCode: authCode,
-          refreshToken: token,
-        })
-    );
-  }
 
   useEffect(
     function () {
-      if (!token && !authCode) {
-        return;
-      }
-      console.log("effecting");
-      try {
-        getMe(token, authCode)
-          .then((res) => res.json())
-          .then((data) => {
-            if (!token || token === "null") {
-              /* if refresh token does NOT exist already in local storage, add
-            returned refresh token to local storage */
-              const refreshToken = data.refresh_token;
-              localStorage.setItem("refreshToken", refreshToken);
-              setToken(refreshToken);
-            }
-            setUserData(JSON.parse(data.response));
-          });
-      } catch (error) {
-        alert("login to spotify has failed");
-        console.error("login error: ", error);
-      }
+      apiHandler
+        .getMe()
+        // .then((res) => {
+        //   // console.log(res)
+        //   return res
+        // })
+        .then((res) => res.json())
+        .then((data) => {
+          setUserData(JSON.parse(data.response));
+          apiHandler.saveRefreshToken(data.refresh_token);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    [authCode, token]
+    []
   );
 
   if (userData) {
@@ -50,19 +31,4 @@ export default function App() {
   } else {
     return <LoggedOut />;
   }
-}
-
-function getAuthCode() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const authCode = urlParams.get("code");
-  return authCode;
-}
-
-function getToken() {
-  const refreshToken = localStorage.getItem("refreshToken");
-  if (refreshToken && refreshToken !== "null") {
-    return refreshToken;
-  }
-  return "";
 }
