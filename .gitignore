@@ -2,3 +2,4 @@
 *.txt
 *.json
 *.sh
+node_modules
