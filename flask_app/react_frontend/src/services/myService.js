@@ -59,6 +59,7 @@ class MyService {
   }
 
   searchSpotify(query, limit, offset, seedType) {
+    console.log(query)
     return fetch(
       '/api/searcher?' +
         new URLSearchParams({
