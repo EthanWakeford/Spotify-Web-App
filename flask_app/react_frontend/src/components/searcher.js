@@ -9,7 +9,7 @@ export function Searcher() {
   const [query, setQuery] = useState('');
   const [seedSelection, setSeedSelection] = useState([]);
   const [recommendationResults, setRecommendationResults] = useState();
-
+  const [seedType, setSeedType] = useState('artist');
 
   function searchSubmit(e) {
     if (query === '') {
@@ -18,13 +18,13 @@ export function Searcher() {
     }
 
     apiHandler
-      .searchSpotify(query, 4, 0)
+      .searchSpotify(query, 6, 0, seedType)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setSearchResults(data);
-        // next offset is always reset to 4
-        setResultOffset(4);
+        // next offset is always reset to 6
+        setResultOffset(6);
       });
   }
 
@@ -35,12 +35,12 @@ export function Searcher() {
     }
     console.log(resultOffset);
     apiHandler
-      .searchSpotify(query, 4, resultOffset)
+      .searchSpotify(query, 6, resultOffset, seedType)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setSearchResults(data);
-        setResultOffset(resultOffset + 4);
+        setResultOffset(resultOffset + 6);
       });
   }
 
@@ -72,45 +72,52 @@ export function Searcher() {
         <button type='submit' onClick={searchSubmit}>
           Search
         </button>
+        <select value={seedType} onChange={(e) => setSeedType(e.target.value)}>
+          <option value={'artist'}>Artist</option>
+          <option value={'track'}>Track</option>
+        </select>
         <button type='submit' onClick={searchNextPage}>
           More Results
         </button>
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          <SearchResult
-            result={searchResults.artists.items[0]}
-            seedSelection={seedSelection}
-            customOnClick={() =>
-              resultSelected(searchResults.artists.items[0].id)
-            }
-          />
-          <SearchResult
-            result={searchResults.artists.items[1]}
-            seedSelection={seedSelection}
-            customOnClick={() =>
-              resultSelected(searchResults.artists.items[1].id)
-            }
-          />
-          <SearchResult
-            result={searchResults.artists.items[2]}
-            seedSelection={seedSelection}
-            customOnClick={() =>
-              resultSelected(searchResults.artists.items[2].id)
-            }
-          />
-          <SearchResult
-            result={searchResults.artists.items[3]}
-            seedSelection={seedSelection}
-            customOnClick={() =>
-              resultSelected(searchResults.artists.items[3].id)
-            }
-          />
+          {'artists' in searchResults
+            ? searchResults.artists.items.map((x, index) => (
+                <SearchResult
+                  key={searchResults.artists.items[index].id}
+                  result={searchResults.artists.items[index]}
+                  seedSelection={seedSelection}
+                  customOnClick={() =>
+                    resultSelected(searchResults.artists.items[index].id)
+                  }
+                />
+              ))
+            : null}
+          {'tracks' in searchResults
+            ? searchResults.tracks.items.map((x, index) => (
+                <SearchResult
+                  key={searchResults.tracks.items[index].id}
+                  result={searchResults.tracks.items[index]}
+                  seedSelection={seedSelection}
+                  customOnClick={() =>
+                    resultSelected(searchResults.tracks.items[index].id)
+                  }
+                />
+              ))
+            : null}
         </div>
         <br />
         <Recommendations
           seedSelection={seedSelection}
           setRecommendationResults={setRecommendationResults}
         />
-        {recommendationResults ? (<RecommendationResult result={recommendationResults} />) : <></>}
+        {recommendationResults
+          ? recommendationResults.map((x, index) => (
+              <RecommendationResult
+                key={recommendationResults[index].id}
+                result={recommendationResults[index]}
+              />
+            ))
+          : null}
       </>
     );
   } else {
@@ -133,6 +140,10 @@ export function Searcher() {
         <button type='submit' onClick={searchSubmit}>
           Search
         </button>
+        <select value={seedType} onChange={(e) => setSeedType(e.target.value)}>
+          <option value={'artist'}>Artist</option>
+          <option value={'track'}>Track</option>
+        </select>
       </>
     );
   }

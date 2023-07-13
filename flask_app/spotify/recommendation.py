@@ -5,12 +5,11 @@ from spotify.token import create_token
 
 def get_recommendations(**kwargs):
     """gets the recommendations, *args are the url parameters"""
-    print(kwargs)
 
     url = 'https://api.spotify.com/v1/recommendations'
     token = create_token()
     payload = {
-        'limit': '1',
+        'limit': '10',
         'market': 'US',
         # 'seed_artists': '6U1lmwvy3I9dIYu9RalJi6',
         # 'seed_tracks': '0wBVIJrD6tvVnBIQTEQpBt',
@@ -31,8 +30,6 @@ def get_recommendations(**kwargs):
         # 'Accept': 'application/json',
         # 'Content-Type': 'application/json'
     }
-
-    print(payload)
 
     r = requests.get(url, params=payload, headers=headers)
     return r.text
