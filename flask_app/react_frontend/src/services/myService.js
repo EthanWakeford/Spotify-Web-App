@@ -58,19 +58,19 @@ class MyService {
     return '';
   }
 
-  searchSpotify(query, limit, offset) {
+  searchSpotify(query, limit, offset, seedType) {
     return fetch(
       '/api/searcher?' +
         new URLSearchParams({
           query: query,
           limit: limit,
           offset: offset,
+          type: seedType,
         })
     );
   }
 
   getRecommendations(recommendationParams) {
-    console.log(recommendationParams)
     return fetch(
       '/api/recommendations?' + new URLSearchParams(recommendationParams)
     );

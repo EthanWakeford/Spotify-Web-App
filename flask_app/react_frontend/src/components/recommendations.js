@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { SearchResult } from './searchResults';
 import apiHandler from '../services/myService';
 
 export function Recommendations({ seedSelection, setRecommendationResults }) {
@@ -13,7 +11,7 @@ export function Recommendations({ seedSelection, setRecommendationResults }) {
       .then((data) => {
         console.log(data)
         if (data.tracks) {
-          setRecommendationResults(data.tracks[0])
+          setRecommendationResults(data.tracks)
         } else {
         setRecommendationResults(data.artists[0])
         }
