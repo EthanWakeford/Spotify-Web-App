@@ -47,4 +47,6 @@ def populate_playlist(token, playlist_id, song_uris):
 
     r = requests.post(url, headers=headers, json=data)
 
-    return r.text
+    if r.status_code != 201:
+        raise Exception('Failed to populate playlist')
+    return json.dumps(playlist_id)
