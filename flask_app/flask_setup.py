@@ -81,6 +81,15 @@ def searcher():
     return spotify.search.search(**url_args)
 
 
+@app.route('/api/create_playlist', methods=['POST'])
+def create_playlist():
+    """creates a user playlist"""
+    refresh_token = request.form['token']
+    playlist_name = request.form['name']
+    user_id = request.form['user_id']
+    return spotify.playlist.create_playlist(refresh_token, playlist_name, user_id)
+
+
 if __name__ == "__main__":
     """ Main Function """
     app.run(host='localhost', port=3000)

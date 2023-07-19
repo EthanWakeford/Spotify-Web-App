@@ -1,5 +1,4 @@
 """different functions to get info about users"""
-
 import requests
 from spotify.token import create_auth_token, create_token, refresh_auth
 import json

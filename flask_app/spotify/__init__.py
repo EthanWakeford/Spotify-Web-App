@@ -6,3 +6,4 @@ import spotify.artist
 import spotify.token
 import spotify.recommendation
 import spotify.search
+import spotify.playlist
