@@ -1,6 +1,6 @@
 export function SearchResult({ result, customOnClick }) {
   return (
-    <div style={{ margin: '0 20px', width: '20%' }} onClick={customOnClick}>
+    <div style={{ margin: '0 20px', width: '20%', maxWidth: '200px' }} onClick={customOnClick}>
       {'images' in result && result.images.length > 0 ? (
         <img
           style={{ width: '10em' }}

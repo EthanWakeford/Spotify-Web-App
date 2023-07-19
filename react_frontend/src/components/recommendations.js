@@ -32,7 +32,7 @@ export function Recommendations({
 
   return (
     <>
-      <button type='submit' onClick={getRecommendations}>
+      <button type='submit' onClick={getRecommendations} style={{height: '30px', width: '150px'}}>
         Recommend Me
       </button>
     </>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Recommendations } from './recommendations';
 import { SearchResult, RecommendationResult } from './searchResults';
 import { Selection } from './selection';
-import { SearchParameter } from './searchParameter';
+import { SearchAttribute } from './searchAttribute';
 import apiHandler from '../services/myService';
 
 export function Searcher() {
@@ -69,7 +69,7 @@ export function Searcher() {
   if (searchResults) {
     return (
       <>
-        <h2>Search Spotify</h2>
+        <h2>Search Spotify For Recommendation Seeds</h2>
         <h3>Selections:</h3>
         <Selection
           seedSelection={seedSelection}
@@ -127,11 +127,24 @@ export function Searcher() {
             : null}
         </div>
         <br />
-        <SearchParameter
-          songAttributes={songAttributes}
-          setSongAttributes={setSongAttributes}
-        ></SearchParameter>
+        {[
+          'acousticness',
+          'dancability',
+          'energy',
+          'instrumentalness',
+          'liveness',
+          'speechiness',
+          'valence',
+        ].map((type) => (
+          <SearchAttribute
+            key={type}
+            attributeType={type}
+            songAttributes={songAttributes}
+            setSongAttributes={setSongAttributes}
+          ></SearchAttribute>
+        ))}
         <hr />
+        <br></br>
         <Recommendations
           seedSelection={seedSelection}
           setRecommendationResults={setRecommendationResults}
@@ -150,25 +163,23 @@ export function Searcher() {
   } else {
     return (
       <>
-        <label>
-          Search Spotify
-          <br />
-          <textarea
-            defaultValue={''}
-            rows={1}
-            cols={40}
-            name='queryBox'
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                searchSubmit();
-              }
-            }}
-          />
-          <br />
-        </label>
+        <h2>Search Spotify For Recommendation Seeds</h2>
+        <br />
+        <textarea
+          defaultValue={''}
+          rows={1}
+          cols={40}
+          name='queryBox'
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              searchSubmit();
+            }
+          }}
+        />
+        <br />
         <button type='submit' onClick={searchSubmit}>
           Search
         </button>
@@ -176,10 +187,32 @@ export function Searcher() {
           <option value={'artist'}>Artist</option>
           <option value={'track'}>Track</option>
         </select>
+        <br></br>
+        <hr></hr>
+        {[
+          'acousticness',
+          'dancability',
+          'energy',
+          'instrumentalness',
+          'liveness',
+          'speechiness',
+          'valence',
+        ].map((type) => (
+          <SearchAttribute
+            key={type}
+            attributeType={type}
+            songAttributes={songAttributes}
+            setSongAttributes={setSongAttributes}
+          ></SearchAttribute>
+        ))}
+        <hr></hr>
+        <br></br>
+        <Recommendations
+          seedSelection={seedSelection}
+          setRecommendationResults={setRecommendationResults}
+          songAttributes={songAttributes}
+        />
       </>
     );
   }
-}
-
-{
 }

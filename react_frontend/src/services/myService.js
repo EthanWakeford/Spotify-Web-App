@@ -84,7 +84,7 @@ class MyService {
     };
     return fetch(
       '/api/recommendations?' +
-        new URLSearchParams(Object.assign(seeds, songAttributes))
+        new URLSearchParams(Object.assign(seeds, songAttributes, {min_acousticness: 0.7}))
     );
   }
 }
