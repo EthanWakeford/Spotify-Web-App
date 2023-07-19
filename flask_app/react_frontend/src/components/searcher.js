@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Recommendations } from './recommendations';
 import { SearchResult, RecommendationResult } from './searchResults';
+import { Selection } from './selection';
 import apiHandler from '../services/myService';
 
 export function Searcher() {
@@ -44,31 +45,47 @@ export function Searcher() {
       });
   }
 
-  function resultSelected(resultId) {
-    if (seedSelection.includes(resultId)) {
-      setSeedSelection(seedSelection.filter((id) => id !== resultId));
+  function resultSelected(result, type) {
+    console.log(result);
+    if (seedSelection.some((x) => x.id === result.id)) {
+      removeFromSelection(result);
     } else {
-      setSeedSelection([...seedSelection, resultId]);
+      setSeedSelection([
+        ...seedSelection,
+        {
+          id: result.id,
+          name: result.name,
+          type: type
+        },
+      ]);
     }
+  }
+
+  function removeFromSelection(result) {
+    setSeedSelection(seedSelection.filter((x) => x.id !== result.id));
   }
 
   if (searchResults) {
     return (
       <>
-        <label>
-          Search Spotify
-          <br />
-          <textarea
-            defaultValue={''}
-            rows={1}
-            cols={40}
-            name='queryBox'
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-          />
-          <br />
-        </label>
+        <h2>Search Spotify</h2>
+        <h3>Selections</h3>
+        <Selection seedSelection={seedSelection} customOnClick={removeFromSelection}/>
+        <br />
+        <textarea
+          rows={1}
+          cols={40}
+          name='queryBox'
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              searchSubmit();
+            }
+          }}
+        />
+        <br />
         <button type='submit' onClick={searchSubmit}>
           Search
         </button>
@@ -87,7 +104,7 @@ export function Searcher() {
                   result={searchResults.artists.items[index]}
                   seedSelection={seedSelection}
                   customOnClick={() =>
-                    resultSelected(searchResults.artists.items[index].id)
+                    resultSelected(searchResults.artists.items[index], 'artist')
                   }
                 />
               ))
@@ -99,7 +116,7 @@ export function Searcher() {
                   result={searchResults.tracks.items[index]}
                   seedSelection={seedSelection}
                   customOnClick={() =>
-                    resultSelected(searchResults.tracks.items[index].id)
+                    resultSelected(searchResults.tracks.items[index], 'track')
                   }
                 />
               ))
@@ -133,6 +150,11 @@ export function Searcher() {
             name='queryBox'
             onChange={(e) => {
               setQuery(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                searchSubmit();
+              }
             }}
           />
           <br />
