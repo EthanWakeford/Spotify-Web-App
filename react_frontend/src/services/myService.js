@@ -32,6 +32,16 @@ class MyService {
     );
   }
 
+  logMeIn() {
+    fetch(
+      '/api/log_in?' +
+        new URLSearchParams({
+          scopes:
+            'user-read-private user-read-email playlist-modify-public playlist-modify-private',
+        })
+    );
+  }
+
   saveRefreshToken(refreshToken) {
     const oldToken = this.getRefreshToken();
 
@@ -84,7 +94,9 @@ class MyService {
     };
     return fetch(
       '/api/recommendations?' +
-        new URLSearchParams(Object.assign(seeds, songAttributes, {min_acousticness: 0.7}))
+        new URLSearchParams(
+          Object.assign(seeds, songAttributes, { min_acousticness: 0.7 })
+        )
     );
   }
 }
