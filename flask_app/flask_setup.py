@@ -84,9 +84,11 @@ def searcher():
 @app.route('/api/create_playlist', methods=['POST'])
 def create_playlist():
     """creates a user playlist"""
-    refresh_token = request.form['token']
-    playlist_name = request.form['name']
-    user_id = request.form['user_id']
+    print(request.json)
+    content = request.json
+    refresh_token = content['token']
+    playlist_name = content['name']
+    user_id = content['user_id']
     return spotify.playlist.create_playlist(refresh_token, playlist_name, user_id)
 
 
