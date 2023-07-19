@@ -8,20 +8,6 @@ export function LoggedIn({ userData }) {
       <hr />
       <Searcher />
       <br />
-      <button
-        onClick={() =>
-          apiHandler
-            .createPlaylist('new playlist')
-            .then((res) => {
-              console.log(res);
-              return res.json();
-            })
-            .then((data) => console.log(data.id))
-            .catch((err) => console.log(err))
-        }
-      >
-        test me
-      </button>
     </>
   );
 }
