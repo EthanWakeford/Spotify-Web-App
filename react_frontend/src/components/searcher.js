@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Recommendations } from './recommendations';
-import { SearchResult, RecommendationResult } from './searchResults';
+import { SearchResult, RecommendationResult } from './results';
 import { Selection } from './selection';
 import { SearchAttribute } from './searchAttribute';
 import apiHandler from '../services/myService';
