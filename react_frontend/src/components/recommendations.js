@@ -1,27 +1,32 @@
 import apiHandler from '../services/myService';
 
-export function Recommendations({ seedSelection, setRecommendationResults }) {
+export function Recommendations({
+  seedSelection,
+  setRecommendationResults,
+  songAttributes,
+}) {
   function getRecommendations() {
-    console.log(seedSelection)
+    console.log(seedSelection);
     if (seedSelection.length === 0) {
-      alert('you must choose at least one seed')
-      return
+      alert('you must choose at least one seed');
+      return;
     }
     apiHandler
-      .getRecommendations(seedSelection)
+      .getRecommendations(seedSelection, songAttributes)
       .then((res) => {
         console.log(res);
         return res.json();
       })
       .then((data) => {
-        console.log(data)
+        console.log(data);
         if (data.tracks) {
-          setRecommendationResults(data.tracks)
+          setRecommendationResults(data.tracks);
         } else {
-        setRecommendationResults(data.artists[0])
+          setRecommendationResults(data.artists[0]);
         }
-      }).catch((err) => {
-        console.log(err)
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }
 
@@ -33,4 +38,3 @@ export function Recommendations({ seedSelection, setRecommendationResults }) {
     </>
   );
 }
-

@@ -71,7 +71,7 @@ class MyService {
     );
   }
 
-  getRecommendations(seedSelection) {
+  getRecommendations(seedSelection, songAttributes) {
     const seeds = {
       seed_artists: seedSelection
         .filter((seed) => seed.type === 'artist')
@@ -83,7 +83,8 @@ class MyService {
         .join(','),
     };
     return fetch(
-      '/api/recommendations?' + new URLSearchParams(seeds)
+      '/api/recommendations?' +
+        new URLSearchParams(Object.assign(seeds, songAttributes))
     );
   }
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Recommendations } from './recommendations';
 import { SearchResult, RecommendationResult } from './searchResults';
 import { Selection } from './selection';
+import { SearchParameter } from './searchParameter';
 import apiHandler from '../services/myService';
 
 export function Searcher() {
@@ -11,6 +12,7 @@ export function Searcher() {
   const [seedSelection, setSeedSelection] = useState([]);
   const [recommendationResults, setRecommendationResults] = useState();
   const [seedType, setSeedType] = useState('artist');
+  const [songAttributes, setSongAttributes] = useState({});
 
   function searchSubmit(e) {
     if (query === '') {
@@ -46,7 +48,6 @@ export function Searcher() {
   }
 
   function resultSelected(result, type) {
-    console.log(result);
     if (seedSelection.some((x) => x.id === result.id)) {
       removeFromSelection(result);
     } else {
@@ -55,7 +56,7 @@ export function Searcher() {
         {
           id: result.id,
           name: result.name,
-          type: type
+          type: type,
         },
       ]);
     }
@@ -69,8 +70,11 @@ export function Searcher() {
     return (
       <>
         <h2>Search Spotify</h2>
-        <h3>Selections</h3>
-        <Selection seedSelection={seedSelection} customOnClick={removeFromSelection}/>
+        <h3>Selections:</h3>
+        <Selection
+          seedSelection={seedSelection}
+          customOnClick={removeFromSelection}
+        />
         <br />
         <textarea
           rows={1}
@@ -85,7 +89,7 @@ export function Searcher() {
             }
           }}
         />
-        <br />
+        <hr />
         <button type='submit' onClick={searchSubmit}>
           Search
         </button>
@@ -123,9 +127,15 @@ export function Searcher() {
             : null}
         </div>
         <br />
+        <SearchParameter
+          songAttributes={songAttributes}
+          setSongAttributes={setSongAttributes}
+        ></SearchParameter>
+        <hr />
         <Recommendations
           seedSelection={seedSelection}
           setRecommendationResults={setRecommendationResults}
+          songAttributes={songAttributes}
         />
         {recommendationResults
           ? recommendationResults.map((x, index) => (
@@ -169,4 +179,7 @@ export function Searcher() {
       </>
     );
   }
+}
+
+{
 }
