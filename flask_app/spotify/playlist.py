@@ -1,10 +1,13 @@
 """creates and adds to a user playlist"""
 import requests
 from spotify.token import refresh_auth
+import json
 
 
-def create_playlist(refresh_token, playlist_name, user_id):
-    """creates a user playlist with spotify api"""
+def create_playlist(refresh_token, playlist_name, user_id, song_uris):
+    """creates a user playlist with spotify api and then populates that
+    playlist with songs"""
+    print(song_uris)
     token = refresh_auth(refresh_token).get('access_token')
 
     headers = {
@@ -17,6 +20,30 @@ def create_playlist(refresh_token, playlist_name, user_id):
     }
 
     url = f'https://api.spotify.com/v1/users/{user_id}/playlists'
+
+    r = requests.post(url, headers=headers, json=data)
+
+    print(r.status_code)
+    if r.status_code != 201:
+        raise Exception('Failed to create playlist')
+
+    playlist_id = json.loads(r.text).get('id')
+
+    return populate_playlist(token, playlist_id, song_uris)
+
+
+def populate_playlist(token, playlist_id, song_uris):
+    """takes a list of songs and populates designated playlist with them"""
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+
+    data = {
+        "uris": song_uris
+    }
+
+    url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
 
     r = requests.post(url, headers=headers, json=data)
 

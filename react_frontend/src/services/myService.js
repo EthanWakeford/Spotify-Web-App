@@ -114,7 +114,7 @@ class MyService {
     );
   }
 
-  createPlaylist(name) {
+  createPlaylist(name, recommendationResults) {
     // creates a user playlist named name
     console.log(this.userId);
     return fetch('/api/create_playlist', {
@@ -127,6 +127,7 @@ class MyService {
         name: name,
         user_id: this.userId,
         token: this.#RefreshToken,
+        song_uris: recommendationResults.map((song) => `spotify:track:${song.id}`)
       }),
     });
   }
