@@ -33,7 +33,7 @@ class MyService {
   }
 
   logMeIn() {
-    fetch(
+    return fetch(
       '/api/log_in?' +
         new URLSearchParams({
           scopes:
