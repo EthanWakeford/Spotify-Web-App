@@ -45,19 +45,24 @@ export function Searcher() {
       });
   }
 
-  function resultSelected(result) {
+  function resultSelected(result, type) {
     console.log(result);
     if (seedSelection.some((x) => x.id === result.id)) {
-      setSeedSelection(seedSelection.filter((x) => x.id !== result.id));
+      removeFromSelection(result);
     } else {
       setSeedSelection([
         ...seedSelection,
         {
           id: result.id,
           name: result.name,
+          type: type
         },
       ]);
     }
+  }
+
+  function removeFromSelection(result) {
+    setSeedSelection(seedSelection.filter((x) => x.id !== result.id));
   }
 
   if (searchResults) {
@@ -65,7 +70,7 @@ export function Searcher() {
       <>
         <h2>Search Spotify</h2>
         <h3>Selections</h3>
-        <Selection seedSelection={seedSelection} customOnClick={resultSelected}/>
+        <Selection seedSelection={seedSelection} customOnClick={removeFromSelection}/>
         <br />
         <textarea
           rows={1}
@@ -99,7 +104,7 @@ export function Searcher() {
                   result={searchResults.artists.items[index]}
                   seedSelection={seedSelection}
                   customOnClick={() =>
-                    resultSelected(searchResults.artists.items[index])
+                    resultSelected(searchResults.artists.items[index], 'artist')
                   }
                 />
               ))
@@ -111,7 +116,7 @@ export function Searcher() {
                   result={searchResults.tracks.items[index]}
                   seedSelection={seedSelection}
                   customOnClick={() =>
-                    resultSelected(searchResults.tracks.items[index])
+                    resultSelected(searchResults.tracks.items[index], 'track')
                   }
                 />
               ))

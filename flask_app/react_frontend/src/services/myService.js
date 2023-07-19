@@ -59,7 +59,7 @@ class MyService {
   }
 
   searchSpotify(query, limit, offset, seedType) {
-    console.log(query)
+    console.log(query);
     return fetch(
       '/api/searcher?' +
         new URLSearchParams({
@@ -71,9 +71,19 @@ class MyService {
     );
   }
 
-  getRecommendations(recommendationParams) {
+  getRecommendations(seedSelection) {
+    const seeds = {
+      seed_artists: seedSelection
+        .filter((seed) => seed.type === 'artist')
+        .map((seed) => seed.id)
+        .join(','),
+      seed_tracks: seedSelection
+        .filter((seed) => seed.type === 'track')
+        .map((seed) => seed.id)
+        .join(','),
+    };
     return fetch(
-      '/api/recommendations?' + new URLSearchParams(recommendationParams)
+      '/api/recommendations?' + new URLSearchParams(seeds)
     );
   }
 }

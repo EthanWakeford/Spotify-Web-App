@@ -8,7 +8,7 @@ export function Recommendations({ seedSelection, setRecommendationResults }) {
       return
     }
     apiHandler
-      .getRecommendations({ seed_artists: seedSelection.map(seed => seed.id).join(',') })
+      .getRecommendations(seedSelection)
       .then((res) => {
         console.log(res);
         return res.json();
@@ -33,3 +33,4 @@ export function Recommendations({ seedSelection, setRecommendationResults }) {
     </>
   );
 }
+

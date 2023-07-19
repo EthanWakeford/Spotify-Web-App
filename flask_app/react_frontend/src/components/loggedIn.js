@@ -4,13 +4,13 @@ export function LoggedIn({ userData }) {
   return (
     <>
       <h1>Hello {userData.display_name}</h1>
-      <div className='artists'>
+      {/* <div className='artists'>
         <button>Get Artist</button>
       </div>
       <hr />
       <div className='recommendations'>
         <button>Get recommendations</button>
-      </div>
+      </div> */}
       <hr />
       <Searcher/>
     </>
