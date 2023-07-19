@@ -11,6 +11,7 @@ export default function App() {
       .getMe()
       .then((res) => res.json())
       .then((data) => {
+        apiHandler.setUserId(JSON.parse(data.response).id)
         setUserData(JSON.parse(data.response));
         apiHandler.saveRefreshToken(data.refresh_token);
       })

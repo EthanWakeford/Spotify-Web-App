@@ -2,9 +2,18 @@
 // serverside API
 
 class MyService {
+  // holds functions to handle querying serverside API, interface to the backend
+  constructor() {
+    this.userId = '';
+  }
+
   #AuthCodeUsed = false;
   #AuthCode = this.getAuthCode();
   #RefreshToken = this.getRefreshToken();
+
+  setUserId(userId) {
+    this.userId = userId;
+  }
 
   getMe() {
     // queries the serverside api, prevents the authcode from being used
@@ -33,6 +42,7 @@ class MyService {
   }
 
   logMeIn() {
+    // Triggers the OAuth control flow
     return fetch(
       '/api/log_in?' +
         new URLSearchParams({
@@ -43,6 +53,7 @@ class MyService {
   }
 
   saveRefreshToken(refreshToken) {
+    // saves a refresh token to local memory
     const oldToken = this.getRefreshToken();
 
     if (!oldToken || oldToken !== refreshToken) {
@@ -69,6 +80,7 @@ class MyService {
   }
 
   searchSpotify(query, limit, offset, seedType) {
+    // searches spotify for artists or tracks based on the query
     console.log(query);
     return fetch(
       '/api/searcher?' +
@@ -82,6 +94,8 @@ class MyService {
   }
 
   getRecommendations(seedSelection, songAttributes) {
+    // gets recommendations from spotify based on the seeds and song
+    // attributes selected
     const seeds = {
       seed_artists: seedSelection
         .filter((seed) => seed.type === 'artist')
@@ -98,6 +112,23 @@ class MyService {
           Object.assign(seeds, songAttributes, { min_acousticness: 0.7 })
         )
     );
+  }
+
+  createPlaylist(name) {
+    // creates a user playlist named name
+    console.log(this.userId);
+    return fetch('/api/create_playlist', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        user_id: this.userId,
+        token: this.#RefreshToken,
+      }),
+    });
   }
 }
 

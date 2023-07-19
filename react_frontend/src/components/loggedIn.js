@@ -7,6 +7,21 @@ export function LoggedIn({ userData }) {
       <h1>Hello {userData.display_name}</h1>
       <hr />
       <Searcher />
+      <br />
+      <button
+        onClick={() =>
+          apiHandler
+            .createPlaylist('new playlist')
+            .then((res) => {
+              console.log(res);
+              return res.json();
+            })
+            .then((data) => console.log(data.id))
+            .catch((err) => console.log(err))
+        }
+      >
+        test me
+      </button>
     </>
   );
 }
