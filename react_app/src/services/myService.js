@@ -109,7 +109,7 @@ class MyService {
     return fetch(
       '/api/recommendations?' +
         new URLSearchParams(
-          Object.assign(seeds, songAttributes, { min_acousticness: 0.7 })
+          Object.assign(seeds, songAttributes)
         )
     );
   }
