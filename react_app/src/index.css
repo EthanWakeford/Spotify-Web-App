@@ -14,11 +14,6 @@
   -webkit-text-size-adjust: 100%;
 }
 
-#root {
-  margin: 0;
-  padding: 0;
-}
-
 a {
   font-weight: 500;
   color: #646cff;

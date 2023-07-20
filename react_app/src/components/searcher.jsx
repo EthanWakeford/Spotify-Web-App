@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Recommendations } from './recommendations';
-import { SearchResult } from './searchresults';
+import { ShowSearchResults } from './showSearchresults';
 import { Selection } from './selection';
 import { SearchAttribute } from './searchAttribute';
 import apiHandler from '../services/myService';
-import {isEmpty} from 'lodash'
+import { isEmpty } from 'lodash';
 
 export function Searcher() {
   const [searchResults, setSearchResults] = useState({});
@@ -23,11 +23,10 @@ export function Searcher() {
     apiHandler
       .searchSpotify(query, 5, 0, seedType)
       .then((res) => {
-        console.log(res)
+        console.log(res);
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         setSearchResults(data);
         // next offset is always reset to 5
         setResultOffset(5);
@@ -70,124 +69,48 @@ export function Searcher() {
     setSeedSelection(seedSelection.filter((x) => x.id !== result.id));
   }
 
-  if (!isEmpty(searchResults)) {
-    return (
-      <>
-        <h2>Search Spotify For Recommendation Seeds</h2>
-        <h3>Selections:</h3>
-        <Selection
-          seedSelection={seedSelection}
-          customOnClick={removeFromSelection}
-        />
-        <br />
-        <textarea
-          rows={1}
-          cols={40}
-          name='queryBox'
-          onChange={(e) => {
-            setQuery(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              searchSubmit();
-            }
-          }}
-        />
-        <hr />
-        <button type='submit' onClick={searchSubmit}>
-          Search
-        </button>
-        <select value={seedType} onChange={(e) => setSeedType(e.target.value)}>
-          <option value={'artist'}>Artist</option>
-          <option value={'track'}>Track</option>
-        </select>
+  return (
+    <>
+      <h2>Search Spotify For Recommendation Seeds</h2>
+      <h3>Selections:</h3>
+      <Selection
+        seedSelection={seedSelection}
+        customOnClick={removeFromSelection}
+      />
+      <br />
+      <textarea
+        rows={1}
+        cols={40}
+        name='queryBox'
+        onChange={(e) => {
+          setQuery(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            searchSubmit();
+          }
+        }}
+      />
+      <hr />
+      <button type='submit' onClick={searchSubmit}>
+        Search
+      </button>
+      <select value={seedType} onChange={(e) => setSeedType(e.target.value)}>
+        <option value={'artist'}>Artist</option>
+        <option value={'track'}>Track</option>
+      </select>
+      {!isEmpty(searchResults) ? (
         <button type='submit' onClick={searchNextPage}>
           More Results
         </button>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {'artists' in searchResults
-            ? searchResults.artists.items.map((x, index) => (
-                <SearchResult
-                  key={searchResults.artists.items[index].id}
-                  result={searchResults.artists.items[index]}
-                  seedSelection={seedSelection}
-                  customOnClick={() =>
-                    resultSelected(searchResults.artists.items[index], 'artist')
-                  }
-                />
-              ))
-            : null}
-          {'tracks' in searchResults
-            ? searchResults.tracks.items.map((x, index) => (
-                <SearchResult
-                  key={searchResults.tracks.items[index].id}
-                  result={searchResults.tracks.items[index]}
-                  seedSelection={seedSelection}
-                  customOnClick={() =>
-                    resultSelected(searchResults.tracks.items[index], 'track')
-                  }
-                />
-              ))
-            : null}
-        </div>
-        <br />
-        <div>
-          {[
-            'acousticness',
-            'dancability',
-            'energy',
-            'instrumentalness',
-            'liveness',
-            'speechiness',
-            'valence',
-          ].map((type) => (
-            <SearchAttribute
-              key={type}
-              attributeType={type}
-              songAttributes={songAttributes}
-              setSongAttributes={setSongAttributes}
-            ></SearchAttribute>
-          ))}
-        </div>
-        <hr />
-        <br />
-        <Recommendations
-          seedSelection={seedSelection}
-          songAttributes={songAttributes}
-        />
-        
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h2>Search Spotify For Recommendation Seeds</h2>
-        <br />
-        <textarea
-          defaultValue={''}
-          rows={1}
-          cols={40}
-          name='queryBox'
-          onChange={(e) => {
-            setQuery(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              searchSubmit();
-            }
-          }}
-        />
-        <br />
-        <button type='submit' onClick={searchSubmit}>
-          Search
-        </button>
-        <select value={seedType} onChange={(e) => setSeedType(e.target.value)}>
-          <option value={'artist'}>Artist</option>
-          <option value={'track'}>Track</option>
-        </select>
-        <br></br>
-        <hr></hr>
+      ) : null}
+      <ShowSearchResults
+        searchResults={searchResults}
+        resultSelected={resultSelected}
+      ></ShowSearchResults>
+      <br />
+      <div style={{ display: 'flex' }}>
         {[
           'acousticness',
           'dancability',
@@ -204,13 +127,15 @@ export function Searcher() {
             setSongAttributes={setSongAttributes}
           ></SearchAttribute>
         ))}
-        <hr></hr>
-        <br></br>
+      </div>
+      <hr />
+      <br />
+      {!isEmpty(searchResults) ? (
         <Recommendations
           seedSelection={seedSelection}
           songAttributes={songAttributes}
         />
-      </>
-    );
-  }
+      ) : null}
+    </>
+  );
 }
