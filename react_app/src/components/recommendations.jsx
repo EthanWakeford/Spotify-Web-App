@@ -1,12 +1,11 @@
+import { useState } from 'react';
 import { CreatePlaylist } from './createPlaylist';
 import apiHandler from '../services/myService';
 import PropTypes from 'prop-types';
 
-export function Recommendations({
-  seedSelection,
-  setRecommendationResults,
-  songAttributes,
-}) {
+export function Recommendations({ seedSelection, songAttributes }) {
+  const [recommendationResults, setRecommendationResults] = useState([]);
+
   function getRecommendations() {
     console.log(seedSelection);
     if (seedSelection.length === 0) {
@@ -41,6 +40,17 @@ export function Recommendations({
       >
         Recommend Me
       </button>
+      <CreatePlaylist
+        recommendationResults={recommendationResults}
+      ></CreatePlaylist>
+      {recommendationResults
+        ? recommendationResults.map((x, index) => (
+            <RecommendationResult
+              key={recommendationResults[index].id}
+              result={recommendationResults[index]}
+            />
+          ))
+        : null}
     </>
   );
 }
@@ -49,4 +59,18 @@ Recommendations.propTypes = {
   seedSelection: PropTypes.array,
   setRecommendationResults: PropTypes.func,
   songAttributes: PropTypes.object,
+};
+
+export function RecommendationResult({ result }) {
+  return (
+    <div>
+      <h4>
+        {result.name}: {result.artists[0].name}
+      </h4>
+    </div>
+  );
+}
+
+RecommendationResult.propTypes = {
+  result: PropTypes.object,
 };

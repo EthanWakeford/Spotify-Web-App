@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Recommendations } from './recommendations';
-import { SearchResult, RecommendationResult } from './results';
+import { SearchResult } from './searchresults';
 import { Selection } from './selection';
 import { SearchAttribute } from './searchAttribute';
-import { CreatePlaylist } from './createPlaylist';
 import apiHandler from '../services/myService';
 import {isEmpty} from 'lodash'
 
@@ -12,7 +11,6 @@ export function Searcher() {
   const [resultOffset, setResultOffset] = useState(0);
   const [query, setQuery] = useState('');
   const [seedSelection, setSeedSelection] = useState([]);
-  const [recommendationResults, setRecommendationResults] = useState([]);
   const [seedType, setSeedType] = useState('artist');
   const [songAttributes, setSongAttributes] = useState({});
 
@@ -156,20 +154,9 @@ export function Searcher() {
         <br />
         <Recommendations
           seedSelection={seedSelection}
-          setRecommendationResults={setRecommendationResults}
           songAttributes={songAttributes}
         />
-        <CreatePlaylist
-          recommendationResults={recommendationResults}
-        ></CreatePlaylist>
-        {recommendationResults
-          ? recommendationResults.map((x, index) => (
-              <RecommendationResult
-                key={recommendationResults[index].id}
-                result={recommendationResults[index]}
-              />
-            ))
-          : null}
+        
       </>
     );
   } else {
@@ -221,7 +208,6 @@ export function Searcher() {
         <br></br>
         <Recommendations
           seedSelection={seedSelection}
-          setRecommendationResults={setRecommendationResults}
           songAttributes={songAttributes}
         />
       </>
