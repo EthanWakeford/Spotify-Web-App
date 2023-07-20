@@ -21,7 +21,7 @@ export default function App() {
       });
   }, []);
 
-  if (isEmpty(userData)) {
+  if (!isEmpty(userData)) {
     return <LoggedIn userData={userData} />;
   } else {
     return <LoggedOut />;
