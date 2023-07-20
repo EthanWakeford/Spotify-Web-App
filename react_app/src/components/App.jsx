@@ -2,6 +2,7 @@ import '../App.css';
 import { useEffect, useState } from 'react';
 import { LoggedIn, LoggedOut } from './loggedIn';
 import apiHandler from '../services/myService';
+import { isEmpty } from 'lodash';
 
 export default function App() {
   const [userData, setUserData] = useState({});
@@ -20,7 +21,7 @@ export default function App() {
       });
   }, []);
 
-  if (userData) {
+  if (isEmpty(userData)) {
     return <LoggedIn userData={userData} />;
   } else {
     return <LoggedOut />;
