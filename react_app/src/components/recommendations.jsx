@@ -33,11 +33,7 @@ export function Recommendations({ seedSelection, songAttributes }) {
 
   return (
     <>
-      <button
-        type='submit'
-        onClick={getRecommendations}
-        style={{ height: '30px', width: '150px' }}
-      >
+      <button type='submit' onClick={getRecommendations}>
         Recommend Me
       </button>
       <CreatePlaylist
