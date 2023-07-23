@@ -1,0 +1,18 @@
+services:
+  client:
+    image: ethanwakeford/spotify_client:1.2
+    ports:
+      - 3000:3000
+  server:
+    image: ethanwakeford/spotify_server:1.1
+    ports:
+      - 5000:5000
+    secrets:
+      - CLIENT_ID
+      - CLIENT_SECRET
+
+secrets:
+  CLIENT_ID:
+    file: CLIENT_ID.txt
+  CLIENT_SECRET:
+    file: CLIENT_SECRET.txt
