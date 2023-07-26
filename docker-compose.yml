@@ -1,16 +1,16 @@
 services:
   client:
-    image: ethanwakeford/spotify_client:1.2
+    build: react_app/
     ports:
-      - 3000:3000
+      - "80:8080"
+
   server:
-    image: ethanwakeford/spotify_server:1.1
+    build: flask_app/
     ports:
-      - 5000:5000
+      - "5000:5000"
     secrets:
       - CLIENT_ID
       - CLIENT_SECRET
-
 secrets:
   CLIENT_ID:
     file: CLIENT_ID.txt
