@@ -28,9 +28,16 @@ export function LoggedOut() {
           onClick={() => {
             apiHandler
               .logMeIn()
-              .then((res) => res.text())
+              .then((res) => {
+                console.log(res.status)
+                console.log(res.redirected)
+                return res.text();
+              })
               .then((data) => {
                 console.log(data);
+              })
+              .catch((err) => {
+                console.log(err);
               });
           }}
         >

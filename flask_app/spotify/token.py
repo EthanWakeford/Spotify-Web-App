@@ -2,10 +2,10 @@
 create_token can be used for most processes, but to login as a user you need
 to use auth_token"""
 
+from flask import redirect
 from os import getenv
 import json
 import requests
-import webbrowser
 from urllib.parse import urlencode
 import base64
 
@@ -42,10 +42,9 @@ def create_auth_code(scopes):
         'scope': scopes
     }
     # Open spotfiy page for OAuth flow
-    webbrowser.open("https://accounts.spotify.com/authorize?" +
-                    urlencode(auth_headers))
 
-    return 'asdf'
+    return redirect("https://accounts.spotify.com/authorize?" + urlencode(auth_headers), code=302)
+    # return redirect("https://www.google.com/", code=302)
 
 
 def create_auth_token(auth_code):

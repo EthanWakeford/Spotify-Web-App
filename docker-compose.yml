@@ -8,11 +8,6 @@ services:
     build: flask_app/
     ports:
       - "5000:5000"
-    secrets:
-      - CLIENT_ID
-      - CLIENT_SECRET
-secrets:
-  CLIENT_ID:
-    file: CLIENT_ID.txt
-  CLIENT_SECRET:
-    file: CLIENT_SECRET.txt
+    env_file:
+      - secrets.env
+

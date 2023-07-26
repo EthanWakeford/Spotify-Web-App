@@ -44,7 +44,7 @@ class MyService {
   logMeIn() {
     // Triggers the OAuth control flow
     return fetch(
-      '/api/log_in?' +
+      'http://localhost:5000/api/log_in?' +
         new URLSearchParams({
           scopes:
             'user-read-private user-read-email playlist-modify-public playlist-modify-private',
