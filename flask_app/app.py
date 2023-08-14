@@ -28,6 +28,17 @@ Usage:
 """
 
 
+@app.route('/api/redirect')
+def redirect():
+    """handles spotify Oauth redirect"""
+    print("redirecting")
+    auth_code = request.args.get('code')
+    try:
+        return spotify.user.get_me_init(auth_code)
+    except requests.exceptions.HTTPError:
+        abort(400)
+
+
 @app.route('/api/users', methods=['GET'])
 def user():
     """gets user data"""

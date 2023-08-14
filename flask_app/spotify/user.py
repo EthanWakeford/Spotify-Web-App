@@ -1,4 +1,6 @@
 """different functions to get info about users"""
+from flask import redirect
+from os import getenv
 import requests
 from spotify.token import create_auth_token, create_token, refresh_auth
 import json
@@ -34,3 +36,29 @@ def get_me(auth_code, refresh_token):
 
     return_package = {'refresh_token': refresh_token, 'response': r.text}
     return json.dumps(return_package)
+
+
+def get_me_init(auth_code):
+    """initial spotify resource request"""
+    print('authcode:', auth_code)
+    tokens = create_auth_token(auth_code)
+
+    print('tokens dict:', tokens)
+    
+    access_token = tokens.get('access_token')
+    refresh_token = tokens.get('refresh_token')
+
+    print('token:', access_token)
+    url = 'https://api.spotify.com/v1/me'
+    r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
+
+    if r.status_code == 401:
+        print('\nit broke\n')
+        r.raise_for_status()
+
+    # frontend location
+    redirect_url = getenv('REDIRECT_URL')
+    url = f"{redirect_url}?refresh_token={refresh_token}"
+    print(url)
+    # redirect to homepage
+    return redirect(url, code=302)
