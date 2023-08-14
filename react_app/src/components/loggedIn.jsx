@@ -23,26 +23,28 @@ export function LoggedOut() {
       <h1>Spotify</h1>
       <h3>Hello, log yourself in here</h3>
       <div className='me'>
-        <button
-          className='logIn'
-          onClick={() => {
-            apiHandler
-              .logMeIn()
-              .then((res) => {
-                console.log(res.status)
-                console.log(res.redirected)
-                return res.text();
-              })
-              .then((data) => {
-                console.log(data);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }}
-        >
-          Log Me In
-        </button>
+        <a href={apiHandler.logMeIn()}>
+          <button
+            // className='logIn'
+            // onClick={() => {
+            //   apiHandler
+            //     .logMeIn()
+            //     .then((res) => {
+            //       console.log(res.status)
+            //       console.log(res.redirected)
+            //       return res.text();
+            //     })
+            //     .then((data) => {
+            //       console.log(data);
+            //     })
+            //     .catch((err) => {
+            //       console.log(err);
+            //     });
+            // }}
+          >
+            Log Me In
+          </button>
+        </a>
       </div>
     </>
   );

@@ -24,10 +24,12 @@ def get_me(auth_code, refresh_token):
     access_token = tokens.get('access_token')
     refresh_token = tokens.get('refresh_token')
 
+    print('token:', access_token)
     url = 'https://api.spotify.com/v1/me'
     r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
 
     if r.status_code == 401:
+        print('\nit broke\n')
         r.raise_for_status()
 
     return_package = {'refresh_token': refresh_token, 'response': r.text}

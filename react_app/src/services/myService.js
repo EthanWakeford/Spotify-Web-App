@@ -1,5 +1,7 @@
 // contains a service that handles communication between react and the
 // serverside API
+import config from '../../config.json';
+const serverUrl = config.serverUrl;
 
 class MyService {
   // holds functions to handle querying serverside API, interface to the backend
@@ -33,7 +35,7 @@ class MyService {
     }
 
     return fetch(
-      '/api/me?' +
+      `${serverUrl}/api/me?` +
         new URLSearchParams({
           authCode: this.#AuthCode,
           refreshToken: this.#RefreshToken,
@@ -43,12 +45,12 @@ class MyService {
 
   logMeIn() {
     // Triggers the OAuth control flow
-    return fetch(
-      'http://localhost:5000/api/log_in?' +
-        new URLSearchParams({
-          scopes:
-            'user-read-private user-read-email playlist-modify-public playlist-modify-private',
-        })
+    return (
+      `${serverUrl}/api/log_in?` +
+      new URLSearchParams({
+        scopes:
+          'user-read-private user-read-email playlist-modify-public playlist-modify-private',
+      })
     );
   }
 
@@ -83,7 +85,7 @@ class MyService {
     // searches spotify for artists or tracks based on the query
     console.log(query);
     return fetch(
-      '/api/searcher?' +
+      `${serverUrl}/api/searcher?` +
         new URLSearchParams({
           query: query,
           limit: limit,
@@ -107,17 +109,15 @@ class MyService {
         .join(','),
     };
     return fetch(
-      '/api/recommendations?' +
-        new URLSearchParams(
-          Object.assign(seeds, songAttributes)
-        )
+      `${serverUrl}/api/recommendations?` +
+        new URLSearchParams(Object.assign(seeds, songAttributes))
     );
   }
 
   createPlaylist(name, recommendationResults) {
     // creates a user playlist named name
     console.log(this.userId);
-    return fetch('/api/create_playlist', {
+    return fetch(`${serverUrl}/api/create_playlist`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -127,7 +127,9 @@ class MyService {
         name: name,
         user_id: this.userId,
         token: this.#RefreshToken,
-        song_uris: recommendationResults.map((song) => `spotify:track:${song.id}`)
+        song_uris: recommendationResults.map(
+          (song) => `spotify:track:${song.id}`
+        ),
       }),
     });
   }

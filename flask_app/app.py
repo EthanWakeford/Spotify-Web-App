@@ -5,7 +5,6 @@ from flask_cors import CORS
 import spotify
 import requests
 
-
 app = Flask(__name__)
 CORS(app)
 

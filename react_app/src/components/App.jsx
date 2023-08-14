@@ -10,9 +10,12 @@ export default function App() {
   useEffect(function () {
     apiHandler
       .getMe()
-      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
       .then((data) => {
-        apiHandler.setUserId(JSON.parse(data.response).id)
+        apiHandler.setUserId(JSON.parse(data.response).id);
         setUserData(JSON.parse(data.response));
         apiHandler.saveRefreshToken(data.refresh_token);
       })

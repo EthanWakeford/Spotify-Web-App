@@ -44,8 +44,6 @@ def create_auth_code(scopes):
     # Open spotfiy page for OAuth flow
 
     return redirect("https://accounts.spotify.com/authorize?" + urlencode(auth_headers), code=302)
-    # return redirect("https://www.google.com/", code=302)
-    # return redirect("http://localhost", code=302)
 
 
 def create_auth_token(auth_code):
