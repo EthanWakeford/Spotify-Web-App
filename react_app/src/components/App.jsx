@@ -1,14 +1,34 @@
 import '../App.css';
-import { LoggedIn, LoggedOut } from './loggedIn';
+// import { LoggedIn, LoggedOut } from './loggedIn';
 import apiHandler from '../services/myService';
+import { Searcher } from './searcher';
 import { isEmpty } from 'lodash';
 
 export default function App() {
   const userData = apiHandler.userData;
 
   if (userData && !isEmpty(userData)) {
-    return <LoggedIn userData={userData} />;
+    return (
+      <>
+        <h1>Spotify Music Searcher</h1>
+        <h2>Hello {userData.display_name}</h2>
+        <hr />
+        <Searcher />
+        <br />
+      </>
+    );
   } else {
-    return <LoggedOut />;
+    return (
+      <>
+        <h1>Spotify Music Searcher</h1>
+        <h3>Hello, log yourself in here</h3>
+        <div className='me'>
+          <a href={apiHandler.logMeIn()}>
+            <button>Log Me In</button>
+          </a>
+        </div>
+        <Searcher></Searcher>
+      </>
+    );
   }
 }
