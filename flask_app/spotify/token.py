@@ -67,7 +67,6 @@ def create_auth_token(auth_code):
 
     r = requests.post(url, headers=headers, data=data)
 
-    print("token creation text", r.text)
     access_token = json.loads(r.text).get('access_token')
     refresh_token = json.loads(r.text).get('refresh_token')
 

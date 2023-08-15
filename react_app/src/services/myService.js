@@ -1,12 +1,23 @@
 // contains a service that handles communication between react and the
 // serverside API
+import Cookies from 'js-cookie';
 import config from '../../config.json';
 const serverUrl = config.serverUrl;
 
 class MyService {
   // holds functions to handle querying serverside API, interface to the backend
   constructor() {
-    this.userId = '';
+    const userData = Cookies.get('user_data');
+    if (userData) {
+      const decodedData = decodeURIComponent(userData)
+      // console.log(decodedData);
+      this.userData = JSON.parse(decodeURIComponent(decodedData));
+      this.userId = userData.id
+      console.log(this.userData)
+    } else {
+      this.userData = '';
+      this.userId = ''
+    }
   }
 
   #AuthCodeUsed = false;
@@ -73,12 +84,8 @@ class MyService {
   }
 
   getRefreshToken() {
-    // gets refresh token from local storage, returns empty string if not found
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken && refreshToken !== 'null') {
-      return refreshToken;
-    }
-    return '';
+    // get refresh token from cookies
+    return Cookies.get('refresh_token');
   }
 
   searchSpotify(query, limit, offset, seedType) {

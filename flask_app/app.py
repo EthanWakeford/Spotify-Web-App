@@ -33,6 +33,9 @@ def redirect():
     """handles spotify Oauth redirect"""
     print("redirecting")
     auth_code = request.args.get('code')
+
+    # gets user data from spotify resource server and redirects back to 
+    # homepage with token and data as cookies
     try:
         return spotify.user.get_me_init(auth_code)
     except requests.exceptions.HTTPError:
