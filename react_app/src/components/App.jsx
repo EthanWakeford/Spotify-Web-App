@@ -1,5 +1,4 @@
 import '../App.css';
-// import { LoggedIn, LoggedOut } from './loggedIn';
 import apiHandler from '../services/myService';
 import { Searcher } from './searcher';
 import { isEmpty } from 'lodash';

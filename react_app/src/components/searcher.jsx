@@ -72,34 +72,43 @@ export function Searcher() {
   return (
     <>
       <h2>Search Spotify For Recommendation Seeds</h2>
+      <p>Get recommendations based on seed artists or songs</p>
       <h3>Selections:</h3>
       <Selection
         seedSelection={seedSelection}
         customOnClick={removeFromSelection}
       />
       <br />
-      <textarea
-        rows={1}
-        cols={40}
-        name='queryBox'
-        onChange={(e) => {
-          setQuery(e.target.value);
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '10px',
         }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            searchSubmit();
-          }
-        }}
-      />
+      >
+        <select value={seedType} onChange={(e) => setSeedType(e.target.value)}>
+          <option value={'artist'}>Artist</option>
+          <option value={'track'}>Track</option>
+        </select>
+        <textarea
+          rows={1}
+          cols={40}
+          name='queryBox'
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              searchSubmit();
+            }
+          }}
+        />
+        <button type='submit' onClick={searchSubmit}>
+          Search
+        </button>
+      </div>
       <hr />
-      <button type='submit' onClick={searchSubmit}>
-        Search
-      </button>
-      <select value={seedType} onChange={(e) => setSeedType(e.target.value)}>
-        <option value={'artist'}>Artist</option>
-        <option value={'track'}>Track</option>
-      </select>
       {!isEmpty(searchResults) ? (
         <button type='submit' onClick={searchNextPage}>
           More Results
