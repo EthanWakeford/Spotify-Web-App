@@ -1,4 +1,4 @@
-import '../App.css';
+import '../css/App.css';
 import apiHandler from '../services/myService';
 import { Searcher } from './searcher';
 import { isEmpty } from 'lodash';
