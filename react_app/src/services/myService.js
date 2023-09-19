@@ -1,22 +1,24 @@
 // contains a service that handles communication between react and the
 // serverside API
 import Cookies from 'js-cookie';
-import config from '../../config.json';
-const serverUrl = config.serverUrl;
+const env = import.meta.env;
+console.log(env);
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+console.log(serverUrl);
 
 class MyService {
   // holds functions to handle querying serverside API, interface to the backend
   constructor() {
     const userData = Cookies.get('user_data');
     if (userData) {
-      const decodedData = decodeURIComponent(userData)
+      const decodedData = decodeURIComponent(userData);
       // console.log(decodedData);
       this.userData = JSON.parse(decodeURIComponent(decodedData));
-      this.userId = userData.id
-      console.log(this.userData)
+      this.userId = userData.id;
+      console.log(this.userData);
     } else {
       this.userData = '';
-      this.userId = ''
+      this.userId = '';
     }
   }
 
