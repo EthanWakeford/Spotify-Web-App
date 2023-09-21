@@ -59,10 +59,8 @@ def me():
     """gets info about current user"""
     auth_code = request.args.get('authCode')
     refresh_token = request.args.get('refreshToken')
-    try:
-        return spotify.user.get_me(auth_code, refresh_token)
-    except requests.exceptions.HTTPError:
-        abort(400)
+
+    return spotify.user.get_me(auth_code, refresh_token)
 
 
 @app.route('/log_in', methods=['GET'])

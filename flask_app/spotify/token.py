@@ -39,10 +39,12 @@ def create_auth_code(scopes):
 
     # first we create an authorization code
     client_id = getenv('CLIENT_ID')
+    redirect_uri = getenv('SERVER_URL')
+
     auth_headers = {
         'client_id': client_id,
         'response_type': 'code',
-        'redirect_uri': 'http://localhost:5000/api/redirect',
+        'redirect_uri': redirect_uri,
         'scope': scopes
     }
     # Open spotfiy page for OAuth flow
@@ -54,6 +56,7 @@ def create_auth_token(auth_code):
     """gets a spotify token using an authorization code"""
     client_id = getenv('CLIENT_ID')
     client_secret = getenv('CLIENT_SECRET')
+    redirect_uri = getenv('SERVER_URL')
 
     encoded_credentials = base64.b64encode(
         client_id.encode() + b':' + client_secret.encode()).decode("utf-8")
@@ -66,7 +69,7 @@ def create_auth_token(auth_code):
     data = {
         "grant_type": "authorization_code",
         "code": auth_code,
-        "redirect_uri": "http://localhost:5000/api/redirect"
+        "redirect_uri": redirect_uri
     }
 
     r = requests.post(url, headers=headers, data=data)

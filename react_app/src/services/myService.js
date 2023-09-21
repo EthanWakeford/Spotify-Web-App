@@ -14,7 +14,7 @@ class MyService {
       const decodedData = decodeURIComponent(userData);
       this.userData = JSON.parse(decodeURIComponent(decodedData));
     } else {
-      console.log('this shouldnt happen');
+      console.log('no user data');
       this.userData = '';
     }
   }
