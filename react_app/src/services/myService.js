@@ -12,23 +12,16 @@ class MyService {
     const userData = Cookies.get('user_data');
     if (userData) {
       const decodedData = decodeURIComponent(userData);
-      // console.log(decodedData);
       this.userData = JSON.parse(decodeURIComponent(decodedData));
-      this.userId = userData.id;
-      console.log(this.userData);
     } else {
+      console.log('this shouldnt happen');
       this.userData = '';
-      this.userId = '';
     }
   }
 
   #AuthCodeUsed = false;
   #AuthCode = this.getAuthCode();
   #RefreshToken = this.getRefreshToken();
-
-  setUserId(userId) {
-    this.userId = userId;
-  }
 
   getMe() {
     // queries the serverside api, prevents the authcode from being used
@@ -125,7 +118,7 @@ class MyService {
 
   createPlaylist(name, recommendationResults) {
     // creates a user playlist named name
-    console.log(this.userId);
+    console.log(this.userData.id);
     return fetch(`${serverUrl}/api/create_playlist`, {
       method: 'POST',
       headers: {
@@ -134,7 +127,7 @@ class MyService {
       },
       body: JSON.stringify({
         name: name,
-        user_id: this.userId,
+        user_id: this.userData.id,
         token: this.#RefreshToken,
         song_uris: recommendationResults.map(
           (song) => `spotify:track:${song.id}`
