@@ -3,7 +3,6 @@
 from flask import Flask, request, abort
 from flask_cors import CORS
 import spotify
-import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -40,12 +39,12 @@ def redirect():
     print("redirecting")
     auth_code = request.args.get('code')
 
+    if not auth_code:
+        abort(400)
+
     # gets user data from spotify resource server and redirects back to
     # homepage with token and data as cookies
-    try:
-        return spotify.user.get_me_init(auth_code)
-    except requests.exceptions.HTTPError:
-        abort(400)
+    return spotify.user.handle_redirect(auth_code)
 
 
 @app.route('/users', methods=['GET'])

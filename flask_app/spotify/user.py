@@ -43,12 +43,42 @@ def get_me(auth_code, refresh_token):
     return json.dumps(return_package)
 
 
+def new_get_me(refresh_token):
+    """gets info about user using refresh token"""
+    access_token = refresh_auth(refresh_token).get('access_token')
+
+    url = 'https://api.spotify.com/v1/me'
+    r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
+
+    if r.status_code != 200:
+        # it broke
+        return f"connection with spotify broke, code: {r.status_code}, response: {r.text}", 500
+
+    return r.text
+
+
+def handle_redirect(auth_code):
+    """handles redirecting the browser back to the front-end, along with
+    the refresh token"""
+    try:
+        refresh_token = create_auth_token(auth_code).get('refresh_token')
+    except Exception as e:
+        return e, 500
+
+    # frontend location
+    redirect_url = getenv('REDIRECT_URL')
+
+    response = make_response("Redirecting", 302)
+    response.headers['location'] = f'{redirect_url}?refresh_token={refresh_token}'
+
+    return response
+
+
 def get_me_init(auth_code):
     """initial spotify resource request"""
     # contact spotify server and receive back one time acces token
     # and refresh token
     tokens = create_auth_token(auth_code)
-
     access_token = tokens.get('access_token')
     refresh_token = tokens.get('refresh_token')
 
@@ -70,8 +100,12 @@ def get_me_init(auth_code):
     response = make_response("Redirecting", 302)
     response.headers['location'] = redirect_url
 
-    # set refresh token and user data as cookies
-    response.set_cookie('refresh_token', refresh_token)
-    response.set_cookie('user_data', encoded_user_data)
+    # get the domain of the redirect url for cross domain cookies
+    domain = urllib.parse.urlparse(redirect_url).netloc
 
+    # set refresh token and user data as cookies
+    response.set_cookie('refresh_token', refresh_token, domain=domain)
+    response.set_cookie('user_data', encoded_user_data, domain=domain)
+
+    print(redirect_url)
     return response

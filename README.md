@@ -9,5 +9,5 @@ docker compose up
 
 ## todo
 
-load redirect uri in spotify.token.create_auth_token dynamically, from env??
-get flask container env to work in the first place
+fix error handling on /redirect route
+handle exceptions anytime a token is created
