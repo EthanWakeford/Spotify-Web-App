@@ -41,7 +41,7 @@ class MyService {
     }
 
     return fetch(
-      `${serverUrl}/api/me?` +
+      `${serverUrl}/me?` +
         new URLSearchParams({
           authCode: this.#AuthCode,
           refreshToken: this.#RefreshToken,
@@ -52,7 +52,7 @@ class MyService {
   logMeIn() {
     // Triggers the OAuth control flow
     return (
-      `${serverUrl}/api/log_in?` +
+      `${serverUrl}/log_in?` +
       new URLSearchParams({
         scopes:
           'user-read-private user-read-email playlist-modify-public playlist-modify-private',
@@ -87,7 +87,7 @@ class MyService {
     // searches spotify for artists or tracks based on the query
     console.log(query);
     return fetch(
-      `${serverUrl}/api/searcher?` +
+      `${serverUrl}/searcher?` +
         new URLSearchParams({
           query: query,
           limit: limit,
@@ -111,7 +111,7 @@ class MyService {
         .join(','),
     };
     return fetch(
-      `${serverUrl}/api/recommendations?` +
+      `${serverUrl}/recommendations?` +
         new URLSearchParams(Object.assign(seeds, songAttributes))
     );
   }
@@ -119,7 +119,7 @@ class MyService {
   createPlaylist(name, recommendationResults) {
     // creates a user playlist named name
     console.log(this.userData.id);
-    return fetch(`${serverUrl}/api/create_playlist`, {
+    return fetch(`${serverUrl}/create_playlist`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

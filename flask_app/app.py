@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ runs a flask server """
-from flask import Flask, render_template, request, abort
+from flask import Flask, request, abort
 from flask_cors import CORS
 import spotify
 import requests
@@ -10,37 +10,31 @@ CORS(app)
 
 
 @app.route('/')
-def home():
-    """ retrieves basic html page """
-    return render_template('spotify.html')
-
-
-@app.route('/api')
 def api():
     """returns info about api usage"""
     return """
 This is my api, there are many like it but this one is mine
 Usage:
-    GET api/user:
+    GET /user:
         get user data
-    GET api/artist:
+    GET /artist:
         get artist data
-    GET api/me/?authCode=''&refreshToken='':
+    GET /me/?authCode=''&refreshToken='':
         gets info about the user
-    GET api/login:
+    GET /login:
         begins spotify oauth flow. redirects you
-    GET api/recommendations:
+    GET /recommendations:
         gets recommendations from spotify using url params
-    GET api/searcher:
+    GET /searcher:
         searches for tracks or artists
-    POST api/create_playlist:
+    POST /create_playlist:
         creates a playlist
-    GET api/redirect:
+    GET /redirect:
         handles spotify Oauth redirect
 """
 
 
-@app.route('/api/redirect')
+@app.route('/redirect')
 def redirect():
     """handles spotify Oauth redirect"""
     print("redirecting")
@@ -54,13 +48,13 @@ def redirect():
         abort(400)
 
 
-@app.route('/api/users', methods=['GET'])
+@app.route('/users', methods=['GET'])
 def user():
     """gets user data"""
     return spotify.user.get_user()
 
 
-@app.route('/api/me/', methods=['GET'])
+@app.route('/me/', methods=['GET'])
 def me():
     """gets info about current user"""
     auth_code = request.args.get('authCode')
@@ -71,7 +65,7 @@ def me():
         abort(400)
 
 
-@app.route('/api/log_in', methods=['GET'])
+@app.route('/log_in', methods=['GET'])
 def log_in():
     """logs the user into spotfys api, scopes get added from url parameters"""
     scopes = request.args.get('scopes')
@@ -79,13 +73,13 @@ def log_in():
     return spotify.token.create_auth_code(scopes)
 
 
-@app.route('/api/artists', methods=['GET'])
+@app.route('/artists', methods=['GET'])
 def artist():
     """gets artist data"""
     return spotify.artist.get_artist()
 
 
-@app.route('/api/recommendations', methods=['GET'])
+@app.route('/recommendations', methods=['GET'])
 def recommendations():
     """gets recommendations"""
     url_args = {}
@@ -94,7 +88,7 @@ def recommendations():
     return spotify.recommendation.get_recommendations(**url_args)
 
 
-@app.route('/api/searcher', methods=['GET'])
+@app.route('/searcher', methods=['GET'])
 def searcher():
     """uses the spotify searcher"""
     url_args = {}
@@ -106,7 +100,7 @@ def searcher():
     return spotify.search.search(**url_args)
 
 
-@app.route('/api/create_playlist', methods=['POST'])
+@app.route('/create_playlist', methods=['POST'])
 def create_playlist():
     """creates a user playlist"""
     content = request.json
