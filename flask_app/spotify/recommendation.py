@@ -22,7 +22,7 @@ def get_recommendations(**kwargs):
     # Need at least one seed of some type
     if not any(x in ('seed_artists', 'seed_genres', 'seed_track') for x in payload.keys()):
         print('bad')
-        raise Exception('Need at least one seed')
+        return 'Need at least one seed', 400
 
     headers = {
         'Authorization': f'Bearer {token}'
@@ -32,4 +32,9 @@ def get_recommendations(**kwargs):
     }
 
     r = requests.get(url, params=payload, headers=headers)
+
+    if r.status_code != 200:
+        # it broke
+        return f"connection with spotify broke, code: {r.status_code}, response: {r.text}", 500
+
     return r.text

@@ -9,11 +9,15 @@ import urllib.parse
 
 def get_user():
     """querys the spotify api to retrive user info"""
-
     token = create_token()
     url = 'https://api.spotify.com/v1/users/223tihi7zuc4xc2d4ppsg6d7i'
 
     r = requests.get(url, headers={'Authorization': f'Bearer {token}'})
+
+    if r.status_code != 200:
+        # it broke
+        return f"connection with spotify broke, code: {r.status_code}, response: {r.text}", 500
+
     return r.text
 
 
@@ -31,9 +35,9 @@ def get_me(auth_code, refresh_token):
     url = 'https://api.spotify.com/v1/me'
     r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
 
-    if r.status_code == 401:
-        print('\nit broke\n')
-        r.raise_for_status()
+    if r.status_code != 200:
+        # it broke
+        return f"connection with spotify broke, code: {r.status_code}, response: {r.text}", 500
 
     return_package = {'refresh_token': refresh_token, 'response': r.text}
     return json.dumps(return_package)
@@ -51,9 +55,9 @@ def get_me_init(auth_code):
     url = 'https://api.spotify.com/v1/me'
     r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
 
-    if r.status_code == 401:
-        print('\nit broke\n')
-        r.raise_for_status()
+    if r.status_code != 200:
+        # it broke
+        return f"connection with spotify broke, code: {r.status_code}, response: {r.text}", 500
 
     # get data and encode it for http
     user_data = r.json()

@@ -25,7 +25,7 @@ def create_playlist(refresh_token, playlist_name, user_id, song_uris):
 
     print(r.status_code)
     if r.status_code != 201:
-        raise Exception('Failed to create playlist')
+        return 'Failed to create playlist', 500
 
     playlist_id = json.loads(r.text).get('id')
 
@@ -48,5 +48,5 @@ def populate_playlist(token, playlist_id, song_uris):
     r = requests.post(url, headers=headers, json=data)
 
     if r.status_code != 201:
-        raise Exception('Failed to populate playlist')
+        return 'Failed to populate playlist', 500
     return json.dumps(playlist_id)

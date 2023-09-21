@@ -25,6 +25,10 @@ def create_token():
 
     r = requests.post(url, headers=headers, data=data)
 
+    if r.status_code != 200:
+        # it broke
+        return f"access token creation failed, code: {r.status_code}, response: {r.text}", 500
+
     # read from response, convert from json, get access_token
     return json.loads(r.text)['access_token']
 
@@ -67,6 +71,10 @@ def create_auth_token(auth_code):
 
     r = requests.post(url, headers=headers, data=data)
 
+    if r.status_code != 200:
+        # it broke
+        return f"oauth token creation failed, code: {r.status_code}, response: {r.text}", 500
+
     access_token = json.loads(r.text).get('access_token')
     refresh_token = json.loads(r.text).get('refresh_token')
 
@@ -92,6 +100,11 @@ def refresh_auth(refresh_token):
     }
 
     r = requests.post(url, headers=headers, data=data)
+
+    if r.status_code != 200:
+        # it broke
+        return f"refresh token creation failed, code: {r.status_code}, response: {r.text}", 500
+
     access_token = json.loads(r.text).get('access_token')
 
     return {'access_token': access_token, 'refresh_token': refresh_token}
