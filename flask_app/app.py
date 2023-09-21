@@ -25,6 +25,18 @@ Usage:
         get user data
     GET api/artist:
         get artist data
+    GET api/me/?authCode=''&refreshToken='':
+        gets info about the user
+    GET api/login:
+        begins spotify oauth flow. redirects you
+    GET api/recommendations:
+        gets recommendations from spotify using url params
+    GET api/searcher:
+        searches for tracks or artists
+    POST api/create_playlist:
+        creates a playlist
+    GET api/redirect:
+        handles spotify Oauth redirect
 """
 
 
@@ -34,7 +46,7 @@ def redirect():
     print("redirecting")
     auth_code = request.args.get('code')
 
-    # gets user data from spotify resource server and redirects back to 
+    # gets user data from spotify resource server and redirects back to
     # homepage with token and data as cookies
     try:
         return spotify.user.get_me_init(auth_code)
