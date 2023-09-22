@@ -2,9 +2,22 @@ import '../css/App.css';
 import apiHandler from '../services/myService';
 import { Searcher } from './searcher';
 import { isEmpty } from 'lodash';
+import { useEffect, useState } from 'react';
 
 export default function App() {
-  const userData = apiHandler.userData;
+  const [userData, setUserData] = useState('');
+
+  const getUserData = async () => {
+    const response = await apiHandler.getMe();
+    console.log('response', response);
+    const resData = await response.json();
+    console.log('resData', resData);
+    setUserData(resData);
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, [apiHandler.RefreshToken]);
 
   if (userData && !isEmpty(userData)) {
     return (

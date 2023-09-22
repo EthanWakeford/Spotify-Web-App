@@ -4,13 +4,13 @@ from os import getenv
 import requests
 from spotify.token import create_auth_token, create_token, refresh_auth
 import json
-import urllib.parse
 
 
 def get_user():
-    """querys the spotify api to retrive user info"""
+    """querys the spotify api to retrive user info without oauth"""
     token = create_token()
-    url = 'https://api.spotify.com/v1/users/223tihi7zuc4xc2d4ppsg6d7i'
+    user_id = ''
+    url = f'https://api.spotify.com/v1/users/{user_id}'
 
     r = requests.get(url, headers={'Authorization': f'Bearer {token}'})
 
@@ -60,6 +60,7 @@ def new_get_me(refresh_token):
 def handle_redirect(auth_code):
     """handles redirecting the browser back to the front-end, along with
     the refresh token"""
+    # creating refresh token
     try:
         refresh_token = create_auth_token(auth_code).get('refresh_token')
     except Exception as e:
@@ -71,41 +72,4 @@ def handle_redirect(auth_code):
     response = make_response("Redirecting", 302)
     response.headers['location'] = f'{redirect_url}?refresh_token={refresh_token}'
 
-    return response
-
-
-def get_me_init(auth_code):
-    """initial spotify resource request"""
-    # contact spotify server and receive back one time acces token
-    # and refresh token
-    tokens = create_auth_token(auth_code)
-    access_token = tokens.get('access_token')
-    refresh_token = tokens.get('refresh_token')
-
-    url = 'https://api.spotify.com/v1/me'
-    r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
-
-    if r.status_code != 200:
-        # it broke
-        return f"connection with spotify broke, code: {r.status_code}, response: {r.text}", 500
-
-    # get data and encode it for http
-    user_data = r.json()
-    encoded_user_data = urllib.parse.quote(json.dumps(user_data))
-
-    # frontend location
-    redirect_url = getenv('REDIRECT_URL')
-
-    # redirect back to homepage
-    response = make_response("Redirecting", 302)
-    response.headers['location'] = redirect_url
-
-    # get the domain of the redirect url for cross domain cookies
-    domain = urllib.parse.urlparse(redirect_url).netloc
-
-    # set refresh token and user data as cookies
-    response.set_cookie('refresh_token', refresh_token, domain=domain)
-    response.set_cookie('user_data', encoded_user_data, domain=domain)
-
-    print(redirect_url)
     return response

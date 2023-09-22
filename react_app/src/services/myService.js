@@ -1,6 +1,5 @@
 // contains a service that handles communication between react and the
 // serverside API
-import Cookies from 'js-cookie';
 const env = import.meta.env;
 console.log(env);
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -9,42 +8,34 @@ console.log(serverUrl);
 class MyService {
   // holds functions to handle querying serverside API, interface to the backend
   constructor() {
-    const userData = Cookies.get('user_data');
-    if (userData) {
-      const decodedData = decodeURIComponent(userData);
-      this.userData = JSON.parse(decodeURIComponent(decodedData));
+    this.userData = '';
+    const params = new URLSearchParams(window.location.search);
+    const paramToken = params.get('refresh_token');
+    const storageToken = window.localStorage.getItem('refreshToken');
+
+    if (!paramToken) {
+      this.RefreshToken = storageToken;
     } else {
-      console.log('no user data');
-      this.userData = '';
+      // update storage
+      if (!storageToken || storageToken !== paramToken) {
+        window.localStorage.setItem('refreshToken', paramToken);
+      }
+      this.RefreshToken = paramToken;
     }
   }
-
-  #AuthCodeUsed = false;
-  #AuthCode = this.getAuthCode();
-  #RefreshToken = this.getRefreshToken();
 
   getMe() {
     // queries the serverside api, prevents the authcode from being used
     // more than once
 
-    if (!this.#AuthCode && !this.#RefreshToken) {
+    if (!this.RefreshToken) {
       return Promise.reject('no login creds');
-    }
-
-    if (this.#AuthCode && !this.#RefreshToken) {
-      if (this.#AuthCodeUsed) {
-        this.#AuthCode = '';
-        return Promise.reject('authcode can only be used once');
-      }
-
-      this.#AuthCodeUsed = true;
     }
 
     return fetch(
       `${serverUrl}/me?` +
         new URLSearchParams({
-          authCode: this.#AuthCode,
-          refreshToken: this.#RefreshToken,
+          refreshToken: this.RefreshToken,
         })
     );
   }
@@ -60,27 +51,12 @@ class MyService {
     );
   }
 
-  saveRefreshToken(refreshToken) {
-    // saves a refresh token to local memory
-    const oldToken = this.getRefreshToken();
-
-    if (!oldToken || oldToken !== refreshToken) {
-      localStorage.setItem('refreshToken', refreshToken);
-      this.#RefreshToken = refreshToken;
-    }
-  }
-
   getAuthCode() {
     // gets authcode from url, returns empty string if not found
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const authCode = urlParams.get('code');
     return authCode;
-  }
-
-  getRefreshToken() {
-    // get refresh token from cookies
-    return Cookies.get('refresh_token');
   }
 
   searchSpotify(query, limit, offset, seedType) {
@@ -128,7 +104,7 @@ class MyService {
       body: JSON.stringify({
         name: name,
         user_id: this.userData.id,
-        token: this.#RefreshToken,
+        token: this.RefreshToken,
         song_uris: recommendationResults.map(
           (song) => `spotify:track:${song.id}`
         ),

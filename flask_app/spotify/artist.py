@@ -1,3 +1,4 @@
+"""honestly just here incase i ever need this code"""
 import requests
 from spotify.token import create_token
 
@@ -6,7 +7,8 @@ def get_artist():
     """querys the spotify api to retrive artist info"""
 
     token = create_token()
-    url = 'https://api.spotify.com/v1/artists/6U1lmwvy3I9dIYu9RalJi6'
+    artist_id = ''
+    url = f'https://api.spotify.com/v1/artists/{artist_id}'
 
     r = requests.get(url, headers={'Authorization': f'Bearer {token}'})
 

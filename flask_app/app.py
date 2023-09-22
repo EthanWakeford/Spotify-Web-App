@@ -15,10 +15,10 @@ def api():
 This is my api, there are many like it but this one is mine
 Usage:
     GET /user:
-        get user data
+        (deprecated for now) get user data
     GET /artist:
-        get artist data
-    GET /me/?authCode=''&refreshToken='':
+        (deprecated for now) get artist data
+    GET /me/?refreshToken='':
         gets info about the user
     GET /login:
         begins spotify oauth flow. redirects you
@@ -56,10 +56,9 @@ def user():
 @app.route('/me/', methods=['GET'])
 def me():
     """gets info about current user"""
-    auth_code = request.args.get('authCode')
     refresh_token = request.args.get('refreshToken')
 
-    return spotify.user.get_me(auth_code, refresh_token)
+    return spotify.user.new_get_me(refresh_token)
 
 
 @app.route('/log_in', methods=['GET'])
