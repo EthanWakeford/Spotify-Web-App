@@ -14,7 +14,7 @@ steps:
         # 'REDIRECT_URL=https://react-app-335oto4jwq-uc.a.run.app',
         # '--build-arg',
         # 'CLIENT_SECRET=$$CLIENT_SECRET',
-        # './flask_app'
+        './flask_app'
       ]
     # secretEnv:
       # - "CLIENT_SECRET"
