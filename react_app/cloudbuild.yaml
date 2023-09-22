@@ -10,17 +10,17 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/react-app']
 
-  # Deploy container image to Cloud Run
+  # Deploy image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       [
         'run',
         'deploy',
-        'react-app',
+        '$_SERVICE-NAME',
         '--image',
-        'gcr.io/PROJECT_ID/IMAGE',
+        'gcr.io/$PROJECT_ID/react-app',
         '--region',
-        'us-central1',
+        '$_DEPLOY_REGION',
       ]
     entrypoint: gcloud
 images:
