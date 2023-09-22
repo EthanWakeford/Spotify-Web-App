@@ -3,7 +3,6 @@ from flask import make_response
 from os import getenv
 import requests
 from spotify.token import create_auth_token, create_token, refresh_auth
-import json
 
 
 def get_user():
@@ -21,29 +20,7 @@ def get_user():
     return r.text
 
 
-def get_me(auth_code, refresh_token):
-    """gets info about current user, uses auth code and acesses private info,
-    uses refresh token if available, otherwise creates a new token/refresh token"""
-    if refresh_token and refresh_token != 'null':
-        tokens = refresh_auth(refresh_token)
-    else:
-        tokens = create_auth_token(auth_code)
-    access_token = tokens.get('access_token')
-    refresh_token = tokens.get('refresh_token')
-
-    print('token:', access_token)
-    url = 'https://api.spotify.com/v1/me'
-    r = requests.get(url, headers={'Authorization': f'Bearer {access_token}'})
-
-    if r.status_code != 200:
-        # it broke
-        return f"connection with spotify broke, code: {r.status_code}, response: {r.text}", 500
-
-    return_package = {'refresh_token': refresh_token, 'response': r.text}
-    return json.dumps(return_package)
-
-
-def new_get_me(refresh_token):
+def get_me(refresh_token):
     """gets info about user using refresh token"""
     access_token = refresh_auth(refresh_token).get('access_token')
 

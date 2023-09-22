@@ -58,7 +58,7 @@ def me():
     """gets info about current user"""
     refresh_token = request.args.get('refreshToken')
 
-    return spotify.user.new_get_me(refresh_token)
+    return spotify.user.get_me(refresh_token)
 
 
 @app.route('/log_in', methods=['GET'])

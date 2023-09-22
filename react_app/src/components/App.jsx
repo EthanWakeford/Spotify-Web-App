@@ -9,9 +9,7 @@ export default function App() {
 
   const getUserData = async () => {
     const response = await apiHandler.getMe();
-    console.log('response', response);
     const resData = await response.json();
-    console.log('resData', resData);
     setUserData(resData);
   };
 

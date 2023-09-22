@@ -61,7 +61,6 @@ class MyService {
 
   searchSpotify(query, limit, offset, seedType) {
     // searches spotify for artists or tracks based on the query
-    console.log(query);
     return fetch(
       `${serverUrl}/searcher?` +
         new URLSearchParams({
@@ -94,7 +93,6 @@ class MyService {
 
   createPlaylist(name, recommendationResults) {
     // creates a user playlist named name
-    console.log(this.userData.id);
     return fetch(`${serverUrl}/create_playlist`, {
       method: 'POST',
       headers: {

@@ -107,7 +107,8 @@ def refresh_auth(refresh_token):
 
     if r.status_code != 200:
         # it broke
-        return f"refresh token creation failed, code: {r.status_code}, response: {r.text}", 500
+        raise Exception(
+            f"oauth token creation failed, code: {r.status_code}, response: {r.text}")
 
     access_token = json.loads(r.text).get('access_token')
 
