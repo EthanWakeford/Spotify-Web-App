@@ -16,7 +16,7 @@ steps:
       [
         'run',
         'deploy',
-        '$_SERVICE-NAME',
+        '$_SERVICE_NAME',
         '--image',
         'gcr.io/$PROJECT_ID/react-app',
         '--region',
