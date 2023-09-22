@@ -1,8 +1,7 @@
-# cloud building testing, only builds
-# react-app currently
+# cloud build config for react-app
 
 steps:
-  # install react-app
+  # build react-app
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME', './react_app']
 
@@ -18,7 +17,7 @@ steps:
         'deploy',
         '$_SERVICE_NAME',
         '--image',
-        'gcr.io/$PROJECT_ID/react-app',
+        'gcr.io/$PROJECT_ID/$_SERVICE_NAME',
         '--region',
         '$_DEPLOY_REGION',
       ]
