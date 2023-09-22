@@ -17,7 +17,7 @@ export default function App() {
 
   useEffect(() => {
     getUserData();
-  }, [apiHandler.RefreshToken]);
+  }, []);
 
   if (userData && !isEmpty(userData)) {
     return (
