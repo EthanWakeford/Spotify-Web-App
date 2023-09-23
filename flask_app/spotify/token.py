@@ -36,8 +36,6 @@ def create_token():
 def create_auth_code(scopes):
     """ Creates a spotify authorization code and an access token,
     args are the scopes passed to the auth code"""
-
-    # first we create an authorization code
     client_id = getenv('CLIENT_ID')
     redirect_uri = getenv('SERVER_URL')
 
