@@ -10,11 +10,11 @@ steps:
         'gcr.io/$PROJECT_ID/$_SERVICE_NAME',
         '--build-arg=CLIENT_ID=752437c291344a77831d18c36df14480',
         '--build-arg=REDIRECT_URL=https://react-app-335oto4jwq-uc.a.run.app',
-        # '--build-arg=CLIENT_SECRET=$$CLIENT_SECRET',
+        '--build-arg=CLIENT_SECRET=$$CLIENT_SECRET',
         './flask_app'
       ]
-    # secretEnv:
-      # - "CLIENT_SECRET"
+    secretEnv:
+      - "CLIENT_SECRET"
 
   # docker push
   - name: 'gcr.io/cloud-builders/docker'
@@ -35,7 +35,7 @@ steps:
     entrypoint: gcloud
 images:
   - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME'
-# availableSecrets:
-  # secretManager:
-  # - versionName: 'projects/$PROJECT_ID/secrets/CLIENT_SECRET/versions/1'
-    # env: 'CLIENT_SECRET'
+availableSecrets:
+  secretManager:
+  - versionName: 'projects/$PROJECT_ID/secrets/CLIENT_SECRET/versions/1'
+    env: 'CLIENT_SECRET'
