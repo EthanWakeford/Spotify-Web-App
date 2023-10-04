@@ -13,8 +13,7 @@ steps:
         '--build-arg=CLIENT_SECRET=$$CLIENT_SECRET',
         './flask_app'
       ]
-    secretEnv:
-      - "CLIENT_SECRET"
+    secretEnv: ["CLIENT_SECRET"]
 
   # docker push
   - name: 'gcr.io/cloud-builders/docker'
